@@ -1,0 +1,70 @@
+/* ============================================================
+   KM名古屋ドール デザイントークン
+   ------------------------------------------------------------
+   ここが色・タイポ・余白・形状の唯一の定義場所。
+   実装(Shopify)でもこのファイルをそのまま assets/tokens.css として使う。
+   値の直書き禁止 — 必要な値が無ければまずここに追加すること。
+   意味・使い分けルールは docs/03-design-system.md を参照。
+   ------------------------------------------------------------
+   クラス命名規約: .c-* = 全ページ共通コンポーネント
+                   .s-* = セクション固有スタイル
+   ============================================================ */
+
+:root {
+  /* ---- カラー ---- */
+  --c-porcelain: #FAF8F4;      /* 磁器白: ページ背景 */
+  --c-white: #FFFFFF;          /* カード・ヘッダー背景 */
+  --c-ink: #33302B;            /* 墨: 見出し・本文・フッター背景 */
+  --c-ink-soft: #6E6759;       /* 薄墨: 補足テキスト */
+  --c-line: #E5DFD4;           /* 罫線・カード枠 */
+  --c-gold: #A8875A;           /* 真鍮: アクセント(ラベル・リンク・バッジ枠) */
+  --c-gold-dark: #8A6D43;      /* gold の hover */
+  --c-celadon: #3E5C52;        /* 青磁(濃): 購入/ショップCTA専用 */
+  --c-celadon-dark: #2E463E;   /* celadon の hover */
+  --c-celadon-light: #EAF0ED;  /* 青磁(淡): 淡色背景セクション */
+  --c-danger: #A44A3F;         /* 弁柄: 残りわずか・エラー */
+
+  /* ---- タイポグラフィ ---- */
+  --font-serif: "Shippori Mincho", "Yu Mincho", "YuMincho", serif;
+  --font-sans: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  --font-en: "Cormorant Garamond", "Times New Roman", serif;
+
+  --fs-hero: clamp(32px, 4.5vw, 52px);
+  --fs-h2: clamp(26px, 3vw, 36px);
+  --fs-h3: clamp(19px, 1.6vw, 22px);
+  --fs-lg: 17px;
+  --fs-md: 15px;
+  --fs-sm: 13px;
+  --fs-label: 12px;
+
+  --lh-body: 1.9;
+  --lh-heading: 1.4;
+  --ls-heading: 0.06em;
+  --ls-label: 0.22em;
+  --ls-btn: 0.08em;
+
+  /* ---- 余白スケール（これ以外の余白px禁止） ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --sp-10: 128px;
+
+  /* ---- レイアウト ---- */
+  --container: 1160px;
+  --container-narrow: 800px;
+  --section-pad: clamp(64px, 9vw, 112px);
+  --header-h: 72px;
+
+  /* ---- 形状・エフェクト ---- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --shadow-card: 0 2px 16px rgba(51, 48, 43, 0.07);
+  --transition: 0.25s ease;
+  --focus-ring: 2px solid var(--c-gold);
+}

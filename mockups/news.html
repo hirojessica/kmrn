@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ｜KM名古屋ドール株式会社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- ===== ヘッダー（共通） ===== -->
+<header class="c-header">
+  <div class="c-header__inner">
+    <a href="index.html" class="c-header__logo">
+      <span class="c-logo" role="img" aria-label="KM名古屋ドール株式会社"></span>
+    </a>
+    <nav class="c-header__nav" aria-label="メイン">
+      <a href="about.html">私たちについて</a>
+      <a href="collection.html">商品カテゴリ</a>
+      <a href="news.html">お知らせ</a>
+      <a href="index.html#contact">お問い合わせ</a>
+      <a href="collection.html" class="nav-shop">オンラインショップ</a>
+    </nav>
+    <div class="c-header__icons">
+      <a href="#" aria-label="検索">
+        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      </a>
+      <a href="#" aria-label="アカウント">
+        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+      </a>
+      <a href="#" aria-label="カート">
+        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11l-1-12z"/><path d="M9 10.5V6.5a3 3 0 0 1 6 0v4"/></svg>
+        <span class="c-header__cart-badge">2</span>
+      </a>
+      <button class="c-header__burger" data-drawer-open aria-label="メニュー" aria-controls="drawer" aria-expanded="false">
+        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- モバイルドロワーメニュー（ハンバーガーで開閉。全ページ共通） -->
+<div class="c-drawer" id="drawer">
+  <button class="c-drawer__overlay" data-drawer-close aria-label="メニューを閉じる" tabindex="-1"></button>
+  <nav class="c-drawer__panel" aria-label="モバイルメニュー">
+    <div class="c-drawer__head">
+      <span class="c-logo" role="img" aria-label="KM名古屋ドール株式会社"></span>
+      <button class="c-drawer__close" data-drawer-close aria-label="閉じる">
+        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      </button>
+    </div>
+    <ul class="c-drawer__list">
+      <li><a href="about.html">私たちについて</a></li>
+      <li><a href="news.html">お知らせ</a></li>
+      <li><a href="index.html#contact">お問い合わせ</a></li>
+    </ul>
+    <p class="c-label">Online Shop</p>
+    <ul class="c-drawer__list">
+      <li><a href="collection.html">すべての商品</a></li>
+      <li><a href="collection.html">陶製レース人形</a></li>
+      <li><a href="collection.html">カントリー雑貨</a></li>
+      <li><a href="collection.html">アロマポット</a></li>
+      <li><a href="collection.html">招福アイテム</a></li>
+      <li><a href="collection.html">モールド・型</a></li>
+      <li><a href="collection.html">資材</a></li>
+    </ul>
+    <a href="collection.html" class="c-btn c-btn--primary">オンラインショップ</a>
+  </nav>
+</div>
+
+<main>
+
+<!-- ===== ページヘッダー ===== -->
+<div class="s-pagehead">
+  <div class="container">
+    <p class="c-label">News</p>
+    <h1>お知らせ</h1>
+    <p class="c-breadcrumb"><a href="index.html">ホーム</a><span class="sep">/</span>お知らせ</p>
+  </div>
+</div>
+
+<!-- ===== お知らせ一覧 =====
+     実装: templates/blog.json（blogs/news の記事一覧）。
+     バッジはブログのタグで出し分け（お知らせ/商品情報/催事など）。 -->
+<section class="s-news">
+  <div class="container container--narrow">
+    <ul class="s-news__list">
+      <li><a href="news-article.html" class="s-news__item">
+        <span class="s-news__date">2026.06.20</span>
+        <span class="c-badge c-badge--new">お知らせ</span>
+        <span class="s-news__title">オンラインショップをオープンしました</span>
+      </a></li>
+      <li><a href="news-article.html" class="s-news__item">
+        <span class="s-news__date">2026.06.01</span>
+        <span class="c-badge c-badge--new">商品情報</span>
+        <span class="s-news__title">干支の置物「午」の予約受付を開始しました</span>
+      </a></li>
+      <li><a href="news-article.html" class="s-news__item">
+        <span class="s-news__date">2026.05.12</span>
+        <span class="c-badge c-badge--new">お知らせ</span>
+        <span class="s-news__title">夏季休業のご案内</span>
+      </a></li>
+      <li><a href="news-article.html" class="s-news__item">
+        <span class="s-news__date">2026.04.18</span>
+        <span class="c-badge c-badge--new">催事</span>
+        <span class="s-news__title">「せと陶祖まつり」に出展します</span>
+      </a></li>
+      <li><a href="news-article.html" class="s-news__item">
+        <span class="s-news__date">2026.03.30</span>
+        <span class="c-badge c-badge--new">商品情報</span>
+        <span class="s-news__title">アロマポット「花透かし」シリーズに新色を追加しました</span>
+      </a></li>
+      <li><a href="news-article.html" class="s-news__item">
+        <span class="s-news__date">2026.02.14</span>
+        <span class="c-badge c-badge--new">お知らせ</span>
+        <span class="s-news__title">ウェブサイトをリニューアルしました</span>
+      </a></li>
+    </ul>
+
+    <!-- ページネーション -->
+    <nav class="s-pagination" aria-label="ページ送り">
+      <span class="is-current">1</span>
+      <a href="#">2</a>
+      <a href="#" aria-label="次のページ">→</a>
+    </nav>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== フッター（共通） ===== -->
+<footer class="c-footer">
+  <div class="container">
+    <div class="c-footer__grid">
+      <div>
+        <p class="c-footer__logo"><span class="c-logo c-logo--light" role="img" aria-label="KM名古屋ドール株式会社"></span></p>
+        <p class="c-footer__note">昭和26年創業・瀬戸焼の窯元<br>〒489-0911 愛知県瀬戸市北松山町1-10<br>TEL 0561-59-8686</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">会社案内</a></li>
+          <li><a href="about.html">製造工程</a></li>
+          <li><a href="news.html">お知らせ</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Online Shop</h4>
+        <ul>
+          <li><a href="collection.html">すべての商品</a></li>
+          <li><a href="collection.html">陶製レース人形</a></li>
+          <li><a href="collection.html">カントリー雑貨</a></li>
+          <li><a href="collection.html">アロマポット</a></li>
+          <li><a href="collection.html">招福アイテム</a></li>
+          <li><a href="collection.html">モールド・資材</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">配送・返品について</a></li>
+          <li><a href="#">特定商取引法に基づく表記</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-footer__bottom">
+      <p>© 2026 KM NAGOYA DOLL CO., LTD.</p>
+      <p>決済アイコン（Shopify標準を表示）</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/drawer.js" defer></script>
+</body>
+</html>
