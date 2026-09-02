@@ -527,6 +527,7 @@ section { padding: var(--section-pad) 0; }
   .s-about__grid, .s-product__grid, .s-collection-banner { grid-template-columns: 1fr; }
   .s-collection-banner__media .ph { min-height: 220px; }
   .c-header__nav { display: none; }
+  .c-header__icons { margin-left: auto; }
   .c-header__burger { display: block; }
   .c-footer__grid { grid-template-columns: 1fr 1fr; }
 }
