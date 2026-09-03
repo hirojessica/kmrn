@@ -23,6 +23,8 @@
 
 商品カードは `snippets/card-product.liquid` を1つ作り全セクションで共用（デザイン一貫性のため必須）。
 
+`access-map` は現行本番サイトと同じGoogle Maps埋め込みURLを使用する。iframeに説明用`title`、`loading="lazy"`、`referrerpolicy="no-referrer-when-downgrade"`を付ける。
+
 ### 会社ロゴの実装
 支給ロゴ（王冠マーク+社名、白・透過WebP、609×164）はテーマの `assets/logo.webp` に配置し、CSSマスクで着色する（docs/03 §6 の `.c-logo`）。
 テーマ設定の image_picker を使う場合は inline style でマスクURLを差し込む:

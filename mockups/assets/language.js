@@ -159,6 +159,7 @@
     '経営方針': 'Our Aim',
     '快適な空間を演出する商品作りを目指す': 'To create products that bring comfort and beauty to everyday spaces.',
     'Googleマップ埋め込み（愛知県瀬戸市北松山町1-10）': 'Embedded Google Map (1-10 Kitamatsuyama-cho, Seto, Aichi)',
+    'KM名古屋ドール株式会社へのアクセス': 'Directions to KM Nagoya Doll Co., Ltd.',
     '全24件': '24 products',
     'ピックアップ商品写真': 'Featured product image',
     '（横長・季節商品を想定）': '(wide format for a seasonal feature)',

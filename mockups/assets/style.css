@@ -381,6 +381,8 @@ section { padding: var(--section-pad) 0; }
 /* 会社案内: ブランドステートメント */
 .s-statement { background: var(--c-white); text-align: center; }
 .s-statement__copy { font-family: var(--font-serif); font-size: var(--fs-h3); line-height: 2.4; letter-spacing: var(--ls-heading); }
+.s-access-map { aspect-ratio: 21 / 9; overflow: hidden; border: 1px solid var(--c-line); border-radius: var(--radius-md); }
+.s-access-map iframe { display: block; width: 100%; height: 100%; border: 0; }
 
 /* 会社案内: 沿革タイムライン */
 .s-history { background: var(--c-porcelain); }
@@ -553,6 +555,7 @@ section { padding: var(--section-pad) 0; }
   .c-header__logo .c-logo { height: var(--logo-h-mobile); }
   .c-header__icons { gap: var(--sp-3); }
   .c-language-switch { gap: var(--sp-1); padding-right: var(--sp-1); }
+  .s-access-map { aspect-ratio: 4 / 3; }
   .c-product-grid, .s-process__grid, .s-category__grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
   .s-maker__grid, .s-process-full__row { grid-template-columns: 1fr; }
   .s-process-full__row:nth-child(even) .s-process-full__media { order: 0; }
