@@ -196,6 +196,22 @@ section { padding: var(--section-pad) 0; }
 .c-header__icons { display: flex; align-items: center; gap: var(--sp-4); }
 .c-header__icons a { position: relative; color: var(--c-ink); transition: color var(--transition); }
 .c-header__icons a:hover { color: var(--c-gold-dark); }
+.c-language-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding-right: var(--sp-2);
+  border-right: 1px solid var(--c-line);
+  color: var(--c-ink-soft);
+  font-family: var(--font-en);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-btn);
+  line-height: 1;
+  white-space: nowrap;
+}
+.c-language-switch button { color: inherit; transition: color var(--transition); }
+.c-language-switch button:hover { color: var(--c-gold-dark); }
+.c-language-switch button.is-active { color: var(--c-ink); font-weight: 700; }
 .c-header__cart-badge {
   position: absolute; top: -6px; right: -10px;
   background: var(--c-celadon); color: var(--c-white);
@@ -533,6 +549,10 @@ section { padding: var(--section-pad) 0; }
 }
 
 @media (max-width: 600px) {
+  .c-header__inner { padding: 0 var(--sp-3); gap: var(--sp-3); }
+  .c-header__logo .c-logo { height: var(--logo-h-mobile); }
+  .c-header__icons { gap: var(--sp-3); }
+  .c-language-switch { gap: var(--sp-1); padding-right: var(--sp-1); }
   .c-product-grid, .s-process__grid, .s-category__grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
   .s-maker__grid, .s-process-full__row { grid-template-columns: 1fr; }
   .s-process-full__row:nth-child(even) .s-process-full__media { order: 0; }
@@ -559,6 +579,13 @@ section { padding: var(--section-pad) 0; }
   .c-footer__grid > div:last-child ul { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); }
   .c-footer__grid > div:last-child li { margin-bottom: 0; }
   .c-footer__bottom { margin-top: var(--sp-6); flex-direction: column; gap: var(--sp-1); }
+}
+
+@media (max-width: 360px) {
+  .c-header__inner { padding: 0 var(--sp-2); gap: var(--sp-2); }
+  .c-header__logo .c-logo { height: var(--sp-5); }
+  .c-header__icons { gap: var(--sp-2); }
+  .c-language-switch { padding-right: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

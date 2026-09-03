@@ -29,6 +29,14 @@
 `style="mask-image: url('{{ settings.logo | image_url: width: 609 }}');"`
 ヘッダー=墨、フッター=磁器白。白背景に白ロゴを直接出さないこと。
 
+### 日本語 / 英語対応
+
+- Shopify Marketsで日本語と英語を公開し、テーマ文言は `locales/ja.default.json` と `locales/en.default.json` で管理する
+- 商品・コレクション・ページ・ブログ本文はShopify Translate & Adapt等で英訳を登録する
+- ヘッダーへDawnのローカリゼーションフォームを利用した `JP / EN` セレクターを配置する
+- 手動選択したロケールをShopify標準の仕組みで保持し、未選択の初回のみブラウザ言語を参照する。手動選択後に自動判定で上書きしない
+- 静的モックの挙動・英訳は `mockups/assets/language.js` を参照するが、このJavaScript辞書を本番テーマへそのまま持ち込まない
+
 ## 3. ヒーローセクション schema（動画/画像 切替）★最重要要件
 
 `sections/hero-media.liquid` の設計:

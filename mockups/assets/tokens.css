@@ -60,6 +60,7 @@
   --container-narrow: 800px;
   --section-pad: clamp(64px, 9vw, 112px);
   --header-h: 72px;
+  --logo-h-mobile: 30px;
 
   /* ---- 形状・エフェクト ---- */
   --radius-sm: 2px;

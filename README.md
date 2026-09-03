@@ -47,6 +47,7 @@ E:\KMNAGOYAEC\
 │   │   ├── tokens.css             デザイントークン（唯一の色・タイポ・余白定義）
 │   │   ├── style.css              共通コンポーネント + ページスタイル
 │   │   ├── drawer.js              モバイルドロワーメニュー開閉
+│   │   ├── language.js            JP/EN切替・ブラウザ言語判定・英訳辞書
 │   │   └── logo.webp              会社ロゴ（白・透過。CSSマスクで着色）
 │   ├── index.html                 トップページ（コーポレート + EC導線）
 │   ├── about.html                 会社案内（沿革・製造工程・会社概要）
