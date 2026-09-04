@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>作品ギャラリー｜KM名古屋ドール株式会社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/gallery-design.css">
+<script defer src="assets/language.js">
+</script>
+<script defer src="assets/gallery-design.js">
+</script>
+</head>
+<body>
+<header class="kmn-header">
+<div class="kmn-header__inner">
+<a href="index.html" aria-label="KM名古屋ドール株式会社">
+<span class="kmn-logo" role="img" aria-label="KM名古屋ドール株式会社">
+</span>
+</a>
+<nav aria-label="メイン">
+<a href="index.html#new-arrivals">新商品</a>
+<a href="gallery.html">作品ギャラリー</a>
+<a href="about.html">私たちについて</a>
+<a class="kmn-button" href="collection.html">オンラインショップ</a>
+</nav>
+<div class="kmn-header__actions c-header__icons">
+<a class="kmn-icon-button" href="https://km-nagoya-doll-r1yeax0z.myshopify.com/cart" aria-label="カート">
+<img class="kmn-arrow" src="assets/icon-cart-empty.svg" width="24" height="24" alt="" aria-hidden="true">
+</a>
+<button class="kmn-icon-button kmn-menu-button" data-menu-open aria-label="メニュー" aria-expanded="false" aria-controls="kmn-menu">
+<img class="kmn-arrow" src="assets/icon-hamburger.svg" width="24" height="24" alt="" aria-hidden="true">
+</button>
+</div>
+</div>
+</header>
+<div class="kmn kmn-drawer" id="kmn-menu" hidden>
+<div class="kmn-drawer__panel" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
+<div class="kmn-drawer__head">
+<span class="kmn-logo" role="img" aria-label="KM名古屋ドール株式会社">
+</span>
+<button class="kmn-icon-button" data-menu-close aria-label="メニューを閉じる">
+<img class="kmn-arrow" src="assets/icon-close.svg" width="24" height="24" alt="" aria-hidden="true">
+</button>
+</div>
+<nav>
+<a href="index.html#new-arrivals">新商品</a>
+<a href="gallery.html">作品ギャラリー</a>
+<a href="about.html">私たちについて</a>
+<a href="index.html#contact">お問い合わせ</a>
+<a class="kmn-button" href="collection.html">オンラインショップ<img class="kmn-arrow" src="assets/icon-arrow.svg" width="24" height="24" alt="" aria-hidden="true">
+</a>
+</nav>
+</div>
+</div>
+<main class="kmn" id="MainContent">
+<section class="kmn-section">
+<div class="kmn-container">
+<div class="kmn-heading-row">
+<div>
+<p class="kmn-label">Gallery</p>
+<h1 class="c-heading">作品ギャラリー</h1>
+<p class="kmn-note">陶の表情と、手仕事の風景。写真を選んで、細部までご覧ください。</p>
+</div>
+</div>
+<div class="kmn-filter" role="group" aria-label="作品の分類">
+<button data-gallery-filter="all" aria-pressed="true">すべて</button>
+<button data-gallery-filter="lace" aria-pressed="false">陶製レース人形</button>
+<button data-gallery-filter="porcelain" aria-pressed="false">陶磁器の作品</button>
+<button data-gallery-filter="craft" aria-pressed="false">工房の手仕事</button>
+</div>
+<div class="kmn-gallery-grid">
+<figure class="kmn-gallery-item" data-category="lace">
+<button data-gallery-image="assets/lace-blue.webp" aria-label="陶製レース人形の写真を拡大">
+<img src="assets/lace-blue.webp" alt="陶製レース人形" class="" loading="lazy" width="1080" height="1350">
+</button>
+<figcaption>陶製レース人形</figcaption>
+</figure>
+<figure class="kmn-gallery-item" data-category="craft">
+<button data-gallery-image="assets/lace-painting.webp" aria-label="アン王女の上絵付けの写真を拡大">
+<img src="assets/lace-painting.webp" alt="アン王女の上絵付け" class="" loading="lazy" width="1920" height="1080">
+</button>
+<figcaption>アン王女の上絵付け</figcaption>
+</figure>
+<figure class="kmn-gallery-item" data-category="porcelain">
+<button data-gallery-image="assets/prince-princess.webp" aria-label="プリンス＆プリンセスの写真を拡大">
+<img src="assets/prince-princess.webp" alt="プリンス＆プリンセス" class="" loading="lazy" width="5000" height="2812">
+</button>
+<figcaption>プリンス＆プリンセス</figcaption>
+</figure>
+<figure class="kmn-gallery-item" data-category="porcelain">
+<button data-gallery-image="assets/poodles.webp" aria-label="白磁のプードルの写真を拡大">
+<img src="assets/poodles.webp" alt="白磁のプードル" class="" loading="lazy" width="4441" height="2498">
+</button>
+<figcaption>白磁のプードル</figcaption>
+</figure>
+<figure class="kmn-gallery-item" data-category="porcelain">
+<button data-gallery-image="assets/japanese-doll.webp" aria-label="和装の陶磁器人形の写真を拡大">
+<img src="assets/japanese-doll.webp" alt="和装の陶磁器人形" class="" loading="lazy" width="3897" height="2192">
+</button>
+<figcaption>和装の陶磁器人形</figcaption>
+</figure>
+<figure class="kmn-gallery-item" data-category="craft">
+<button data-gallery-image="assets/workshop.webp" aria-label="工房の手仕事の写真を拡大">
+<img src="assets/workshop.webp" alt="工房の手仕事" class="" loading="lazy" width="4032" height="3024">
+</button>
+<figcaption>工房の手仕事</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section class="kmn-section kmn-contact" id="contact">
+<div class="kmn-container">
+<p class="kmn-label">From Our Atelier to Your Home</p>
+<h2>暮らしに、窯の温もりを。</h2>
+<p>作品との出会いを、オンラインショップで。<br>卸・法人のお取引についてもご相談ください。</p>
+<a class="kmn-button" href="collection.html">オンラインショップ<img class="kmn-arrow" src="assets/icon-arrow.svg" width="24" height="24" alt="" aria-hidden="true">
+</a>
+<p>
+<a class="kmn-link" href="https://km-nagoya-doll.com/contact.html">お問い合わせ</a>
+</p>
+</div>
+</section>
+</main>
+<footer class="kmn-footer">
+<div class="kmn-container">
+<div class="kmn-footer__grid">
+<div class="kmn-footer__brand">
+<span class="kmn-logo" role="img" aria-label="KM名古屋ドール株式会社">
+</span>
+<small>昭和26年創業・瀬戸焼の窯元<br>〒489-0911 愛知県瀬戸市北松山町1-10<br>
+<a href="tel:0561598686">TEL 0561-59-8686</a>
+</small>
+</div>
+<div>
+<p>Company</p>
+<ul>
+<li>
+<a href="about.html">私たちについて</a>
+</li>
+<li>
+<a href="gallery.html">作品ギャラリー</a>
+</li>
+<li>
+<a href="index.html#contact">お問い合わせ</a>
+</li>
+</ul>
+</div>
+<div>
+<p>Online Shop</p>
+<ul>
+<li>
+<a href="collection.html">すべての商品</a>
+</li>
+<li>
+<a href="index.html#new-arrivals">新商品</a>
+</li>
+<li>
+<a href="collection.html#categories">カテゴリから探す</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="kmn-footer__bottom">
+<span>© 2026 KM NAGOYA DOLL CO., LTD.</span>
+<span>Made with care in Seto, Japan.</span>
+</div>
+</div>
+</footer>
+<dialog class="kmn-dialog" id="gallery-dialog" aria-labelledby="gallery-dialog-title">
+<div class="kmn-dialog__head">
+<strong id="gallery-dialog-title">作品ギャラリー</strong>
+<button data-gallery-close>閉じる</button>
+</div>
+<img id="gallery-dialog-image" alt="" width="1080" height="1350">
+<p class="kmn-dialog__caption" id="gallery-dialog-caption">
+</p>
+</dialog>
+</body>
+</html>

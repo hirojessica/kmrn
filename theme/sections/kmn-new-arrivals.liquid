@@ -1,0 +1,18 @@
+<div class="kmn"><section class="kmn-section" id="new-arrivals"><div class="kmn-container"><div class="kmn-heading-row"><div><p class="kmn-label">New &amp; Selected</p><h2>{{ 'kmn.text_10' | t }}</h2></div><a class="kmn-link" href="{{ routes.all_products_collection_url }}">{{ 'kmn.text_11' | t }}<img class="kmn-arrow" src="{{ 'icon-arrow.svg' | asset_url }}" width="24" height="24" alt="" aria-hidden="true"></a></div>{% assign featured = section.settings.collection %}{% if featured == blank %}{% assign featured = collections['all'] %}{% endif %}{% if featured.products_count > 0 %}<div class="kmn-products">{% for product in featured.products limit: 4 %}{% render 'kmn-card-product', product: product %}{% endfor %}</div>{% else %}<div class="kmn-products"><a class="kmn-card" href="{{ routes.root_url }}#gallery"><div class="kmn-card__image"><img src="{{ 'lace-blue.webp' | asset_url }}" alt="{{ 'kmn.text_77' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></div><p class="kmn-card__category">Lace Doll</p><h3>{{ 'kmn.text_77' | t }}</h3><p class="kmn-card__detail">{{ 'kmn.text_12' | t }}</p></a><a class="kmn-card" href="{{ routes.root_url }}#gallery"><div class="kmn-card__image"><img src="{{ 'prince-princess.webp' | asset_url }}" alt="{{ 'kmn.text_13' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></div><p class="kmn-card__category">Porcelain</p><h3>{{ 'kmn.text_13' | t }}</h3><p class="kmn-card__detail">{{ 'kmn.text_12' | t }}</p></a><a class="kmn-card" href="{{ routes.root_url }}#gallery"><div class="kmn-card__image"><img src="{{ 'poodles.webp' | asset_url }}" alt="{{ 'kmn.text_14' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></div><p class="kmn-card__category">Porcelain</p><h3>{{ 'kmn.text_14' | t }}</h3><p class="kmn-card__detail">{{ 'kmn.text_12' | t }}</p></a><a class="kmn-card" href="{{ routes.root_url }}#gallery"><div class="kmn-card__image"><img src="{{ 'panda-teapot.jpg' | asset_url }}" alt="{{ 'kmn.text_15' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></div><p class="kmn-card__category">Tableware</p><h3>{{ 'kmn.text_15' | t }}</h3><p class="kmn-card__detail">{{ 'kmn.text_12' | t }}</p></a></div><p class="kmn-note">{{ 'kmn.text_16' | t }}</p>{% endif %}</div></section></div>
+{% schema %}
+{
+  "name": "KM new-arrivals",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "新商品コレクション"
+    }
+  ],
+  "presets": [
+    {
+      "name": "KM new-arrivals"
+    }
+  ]
+}
+{% endschema %}

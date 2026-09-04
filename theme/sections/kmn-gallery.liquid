@@ -1,0 +1,48 @@
+<div class="kmn"><section class="kmn-section kmn-gallery-section" id="gallery"><div class="kmn-container"><div class="kmn-heading-row"><div><p class="kmn-label">Gallery</p><h2>{{ 'kmn.text_1' | t }}</h2></div><a class="kmn-link" href="#gallery">{{ 'kmn.text_254' | t }}<img class="kmn-arrow" src="{{ 'icon-arrow.svg' | asset_url }}" width="24" height="24" alt="" aria-hidden="true"></a></div><div class="kmn-gallery-grid">{% if section.blocks.size > 0 %}{% for block in section.blocks %}{% if block.settings.image != blank %}<figure class="kmn-gallery-item" {{ block.shopify_attributes }}><button data-gallery-image="{{ block.settings.image | image_url: width: 1800 }}" aria-label="{{ block.settings.title | escape }}"><img src="{{ block.settings.image | image_url: width: 800 }}" srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 800 }} 800w" sizes="(min-width: 850px) 33vw, 50vw" width="800" height="600" loading="lazy" alt="{{ block.settings.title | escape }}"></button><figcaption>{{ block.settings.title | escape }}</figcaption>{% if block.settings.product != blank %}<a class="kmn-link" href="{{ block.settings.product.url }}">{{ 'kmn.text_256' | t }}</a>{% endif %}</figure>{% endif %}{% endfor %}{% elsif section.settings.show_reference_photos %}<figure class="kmn-gallery-item" data-category="lace"><button data-gallery-image="{{ 'lace-blue.webp' | asset_url }}" aria-label="{{ 'kmn.text_262' | t | escape }}"><img src="{{ 'lace-blue.webp' | asset_url }}" alt="{{ 'kmn.text_77' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></button><figcaption>{{ 'kmn.text_77' | t }}</figcaption></figure><figure class="kmn-gallery-item" data-category="craft"><button data-gallery-image="{{ 'lace-painting.webp' | asset_url }}" aria-label="{{ 'kmn.text_263' | t | escape }}"><img src="{{ 'lace-painting.webp' | asset_url }}" alt="{{ 'kmn.text_27' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></button><figcaption>{{ 'kmn.text_27' | t }}</figcaption></figure><figure class="kmn-gallery-item" data-category="porcelain"><button data-gallery-image="{{ 'prince-princess.webp' | asset_url }}" aria-label="{{ 'kmn.text_264' | t | escape }}"><img src="{{ 'prince-princess.webp' | asset_url }}" alt="{{ 'kmn.text_13' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></button><figcaption>{{ 'kmn.text_13' | t }}</figcaption></figure><figure class="kmn-gallery-item" data-category="porcelain"><button data-gallery-image="{{ 'poodles.webp' | asset_url }}" aria-label="{{ 'kmn.text_265' | t | escape }}"><img src="{{ 'poodles.webp' | asset_url }}" alt="{{ 'kmn.text_14' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></button><figcaption>{{ 'kmn.text_14' | t }}</figcaption></figure><figure class="kmn-gallery-item" data-category="porcelain"><button data-gallery-image="{{ 'japanese-doll.webp' | asset_url }}" aria-label="{{ 'kmn.text_266' | t | escape }}"><img src="{{ 'japanese-doll.webp' | asset_url }}" alt="{{ 'kmn.text_28' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></button><figcaption>{{ 'kmn.text_28' | t }}</figcaption></figure><figure class="kmn-gallery-item" data-category="craft"><button data-gallery-image="{{ 'workshop.webp' | asset_url }}" aria-label="{{ 'kmn.text_267' | t | escape }}"><img src="{{ 'workshop.webp' | asset_url }}" alt="{{ 'kmn.text_29' | t | escape }}" class="" loading="lazy" width="1080" height="1350"></button><figcaption>{{ 'kmn.text_29' | t }}</figcaption></figure>{% else %}<p>{{ 'kmn.text_255' | t }}</p>{% endif %}</div></div></section></div>
+{% schema %}
+{
+  "name": "KM 作品ギャラリー",
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_reference_photos",
+      "label": "作品未登録時に既存の参考写真を表示",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "「写真を追加」で画像と作品名を登録すると一覧へ反映されます。ドラッグで並び替えできます。関連商品は任意です。"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "作品写真",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "写真"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "作品名・写真の説明",
+          "default": "作品名"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "関連商品（任意）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KM 作品ギャラリー"
+    }
+  ]
+}
+{% endschema %}

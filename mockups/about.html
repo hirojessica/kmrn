@@ -10,69 +10,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/style.css">
-<script src="assets/language.js" defer></script>
+<script src="assets/language.js" defer>
+</script>
+<link rel="stylesheet" href="assets/gallery-design.css">
+<script defer src="assets/gallery-design.js">
+</script>
 </head>
 <body>
 
 <!-- ===== ヘッダー（index.html と共通） ===== -->
-<header class="c-header">
-  <div class="c-header__inner">
-    <a href="index.html" class="c-header__logo">
-      <span class="c-logo" role="img" aria-label="KM名古屋ドール株式会社"></span>
-    </a>
-    <nav class="c-header__nav" aria-label="メイン">
-      <a href="about.html">私たちについて</a>
-      <a href="collection.html">商品カテゴリ</a>
-      <a href="news.html">お知らせ</a>
-      <a href="index.html#contact">お問い合わせ</a>
-      <a href="collection.html" class="nav-shop">オンラインショップ</a>
-    </nav>
-    <div class="c-header__icons">
-      <a href="#" aria-label="検索">
-        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-      </a>
-      <a href="#" aria-label="アカウント">
-        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
-      </a>
-      <a href="#" aria-label="カート">
-        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11l-1-12z"/><path d="M9 10.5V6.5a3 3 0 0 1 6 0v4"/></svg>
-        <span class="c-header__cart-badge">2</span>
-      </a>
-      <button class="c-header__burger" data-drawer-open aria-label="メニュー" aria-controls="drawer" aria-expanded="false">
-        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-      </button>
-    </div>
-  </div>
+<header class="kmn-header">
+<div class="kmn-header__inner">
+<a href="index.html" aria-label="KM名古屋ドール株式会社">
+<span class="kmn-logo" role="img" aria-label="KM名古屋ドール株式会社">
+</span>
+</a>
+<nav aria-label="メイン">
+<a href="index.html#new-arrivals">新商品</a>
+<a href="gallery.html">作品ギャラリー</a>
+<a href="about.html">私たちについて</a>
+<a class="kmn-button" href="collection.html">オンラインショップ</a>
+</nav>
+<div class="kmn-header__actions c-header__icons">
+<a class="kmn-icon-button" href="https://km-nagoya-doll-r1yeax0z.myshopify.com/cart" aria-label="カート">
+<img class="kmn-arrow" src="assets/icon-cart-empty.svg" width="24" height="24" alt="" aria-hidden="true">
+</a>
+<button class="kmn-icon-button kmn-menu-button" data-menu-open aria-label="メニュー" aria-expanded="false" aria-controls="kmn-menu">
+<img class="kmn-arrow" src="assets/icon-hamburger.svg" width="24" height="24" alt="" aria-hidden="true">
+</button>
+</div>
+</div>
 </header>
+<div class="kmn kmn-drawer" id="kmn-menu" hidden>
+<div class="kmn-drawer__panel" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
+<div class="kmn-drawer__head">
+<span class="kmn-logo" role="img" aria-label="KM名古屋ドール株式会社">
+</span>
+<button class="kmn-icon-button" data-menu-close aria-label="メニューを閉じる">
+<img class="kmn-arrow" src="assets/icon-close.svg" width="24" height="24" alt="" aria-hidden="true">
+</button>
+</div>
+<nav>
+<a href="index.html#new-arrivals">新商品</a>
+<a href="gallery.html">作品ギャラリー</a>
+<a href="about.html">私たちについて</a>
+<a href="index.html#contact">お問い合わせ</a>
+<a class="kmn-button" href="collection.html">オンラインショップ<img class="kmn-arrow" src="assets/icon-arrow.svg" width="24" height="24" alt="" aria-hidden="true">
+</a>
+</nav>
+</div>
+</div>
 
 <!-- モバイルドロワーメニュー（ハンバーガーで開閉。全ページ共通） -->
-<div class="c-drawer" id="drawer">
-  <button class="c-drawer__overlay" data-drawer-close aria-label="メニューを閉じる" tabindex="-1"></button>
-  <nav class="c-drawer__panel" aria-label="モバイルメニュー">
-    <div class="c-drawer__head">
-      <span class="c-logo" role="img" aria-label="KM名古屋ドール株式会社"></span>
-      <button class="c-drawer__close" data-drawer-close aria-label="閉じる">
-        <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
-      </button>
-    </div>
-    <ul class="c-drawer__list">
-      <li><a href="about.html">私たちについて</a></li>
-      <li><a href="news.html">お知らせ</a></li>
-      <li><a href="index.html#contact">お問い合わせ</a></li>
-    </ul>
-    <p class="c-label">Online Shop</p>
-    <ul class="c-drawer__list">
-      <li><a href="collection.html">すべての商品</a></li>
-      <li><a href="collection.html">陶製レース人形</a></li>
-      <li><a href="collection.html">カントリー雑貨</a></li>
-      <li><a href="collection.html">アロマポット</a></li>
-      <li><a href="collection.html">招福アイテム</a></li>
-      <li><a href="collection.html">モールド・型</a></li>
-      <li><a href="collection.html">資材</a></li>
-    </ul>
-    <a href="collection.html" class="c-btn c-btn--primary">オンラインショップ</a>
-  </nav>
-</div>
+
 
 <main>
 
@@ -81,7 +71,9 @@
   <div class="container">
     <p class="c-label">About Us</p>
     <h1>会社案内</h1>
-    <p class="c-breadcrumb"><a href="index.html">ホーム</a><span class="sep">/</span>会社案内</p>
+    <p class="c-breadcrumb">
+<a href="index.html">ホーム</a>
+<span class="sep">/</span>会社案内</p>
   </div>
 </div>
 
@@ -139,7 +131,9 @@
     </div>
 
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）原型制作</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）原型制作</div>
+</div>
       <div>
         <p class="s-process__num">01</p>
         <h3 class="s-process__name">原型制作</h3>
@@ -147,7 +141,9 @@
       </div>
     </div>
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）鋳込み成形</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）鋳込み成形</div>
+</div>
       <div>
         <p class="s-process__num">02</p>
         <h3 class="s-process__name">鋳込み成形</h3>
@@ -155,7 +151,9 @@
       </div>
     </div>
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）仕上げ作業</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）仕上げ作業</div>
+</div>
       <div>
         <p class="s-process__num">03</p>
         <h3 class="s-process__name">仕上げ作業</h3>
@@ -163,7 +161,9 @@
       </div>
     </div>
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）施釉</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）施釉</div>
+</div>
       <div>
         <p class="s-process__num">04</p>
         <h3 class="s-process__name">施釉</h3>
@@ -171,7 +171,9 @@
       </div>
     </div>
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）ガス窯</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）ガス窯</div>
+</div>
       <div>
         <p class="s-process__num">05</p>
         <h3 class="s-process__name">本焼成</h3>
@@ -179,7 +181,9 @@
       </div>
     </div>
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）上絵作業</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）上絵作業</div>
+</div>
       <div>
         <p class="s-process__num">06</p>
         <h3 class="s-process__name">上絵作業</h3>
@@ -187,7 +191,9 @@
       </div>
     </div>
     <div class="s-process-full__row">
-      <div class="s-process-full__media"><div class="ph">工程写真（4:3）電気窯</div></div>
+      <div class="s-process-full__media">
+<div class="ph">工程写真（4:3）電気窯</div>
+</div>
       <div>
         <p class="s-process__num">07</p>
         <h3 class="s-process__name">上絵焼成</h3>
@@ -207,13 +213,34 @@
       </div>
     </div>
     <dl>
-      <div class="row"><dt>社名</dt><dd>KM名古屋ドール株式会社（旧テーケー名古屋人形製陶株式会社）</dd></div>
-      <div class="row"><dt>所在地</dt><dd>〒489-0911 愛知県瀬戸市北松山町1-10</dd></div>
-      <div class="row"><dt>電話</dt><dd>0561-59-8686</dd></div>
-      <div class="row"><dt>代表者</dt><dd>代表取締役 本村 久美子</dd></div>
-      <div class="row"><dt>設立</dt><dd>2023年9月1日（創業 昭和26年）</dd></div>
-      <div class="row"><dt>事業内容</dt><dd>陶磁器製品（陶製レース人形・カントリー雑貨・アロマポット・招福製品・モールド・資材）の製造販売</dd></div>
-      <div class="row"><dt>経営方針</dt><dd>快適な空間を演出する商品作りを目指す</dd></div>
+      <div class="row">
+<dt>社名</dt>
+<dd>KM名古屋ドール株式会社（旧テーケー名古屋人形製陶株式会社）</dd>
+</div>
+      <div class="row">
+<dt>所在地</dt>
+<dd>〒489-0911 愛知県瀬戸市北松山町1-10</dd>
+</div>
+      <div class="row">
+<dt>電話</dt>
+<dd>0561-59-8686</dd>
+</div>
+      <div class="row">
+<dt>代表者</dt>
+<dd>代表取締役 本村 久美子</dd>
+</div>
+      <div class="row">
+<dt>設立</dt>
+<dd>2023年9月1日（創業 昭和26年）</dd>
+</div>
+      <div class="row">
+<dt>事業内容</dt>
+<dd>陶磁器製品（陶製レース人形・カントリー雑貨・アロマポット・招福製品・モールド・資材）の製造販売</dd>
+</div>
+      <div class="row">
+<dt>経営方針</dt>
+<dd>快適な空間を演出する商品作りを目指す</dd>
+</div>
     </dl>
   </div>
 </section>
@@ -233,7 +260,8 @@
         title="KM名古屋ドール株式会社へのアクセス"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen></iframe>
+        allowfullscreen>
+</iframe>
     </div>
   </div>
 </section>
@@ -254,49 +282,53 @@
 </main>
 
 <!-- ===== フッター（index.html と共通） ===== -->
-<footer class="c-footer">
-  <div class="container">
-    <div class="c-footer__grid">
-      <div>
-        <p class="c-footer__logo"><span class="c-logo c-logo--light" role="img" aria-label="KM名古屋ドール株式会社"></span></p>
-        <p class="c-footer__note">昭和26年創業・瀬戸焼の窯元<br>〒489-0911 愛知県瀬戸市北松山町1-10<br>TEL 0561-59-8686</p>
-      </div>
-      <div>
-        <h4>Company</h4>
-        <ul>
-          <li><a href="about.html">会社案内</a></li>
-          <li><a href="about.html">製造工程</a></li>
-          <li><a href="news.html">お知らせ</a></li>
-          <li><a href="#">お問い合わせ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Online Shop</h4>
-        <ul>
-          <li><a href="collection.html">すべての商品</a></li>
-          <li><a href="collection.html">陶製レース人形</a></li>
-          <li><a href="collection.html">カントリー雑貨</a></li>
-          <li><a href="collection.html">アロマポット</a></li>
-          <li><a href="collection.html">招福アイテム</a></li>
-          <li><a href="collection.html">モールド・資材</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Support</h4>
-        <ul>
-          <li><a href="#">配送・返品について</a></li>
-          <li><a href="#">特定商取引法に基づく表記</a></li>
-          <li><a href="#">プライバシーポリシー</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="c-footer__bottom">
-      <p>© 2026 KM NAGOYA DOLL CO., LTD.</p>
-      <p>決済アイコン（Shopify標準を表示）</p>
-    </div>
-  </div>
+<footer class="kmn-footer">
+<div class="kmn-container">
+<div class="kmn-footer__grid">
+<div class="kmn-footer__brand">
+<span class="kmn-logo" role="img" aria-label="KM名古屋ドール株式会社">
+</span>
+<small>昭和26年創業・瀬戸焼の窯元<br>〒489-0911 愛知県瀬戸市北松山町1-10<br>
+<a href="tel:0561598686">TEL 0561-59-8686</a>
+</small>
+</div>
+<div>
+<p>Company</p>
+<ul>
+<li>
+<a href="about.html">私たちについて</a>
+</li>
+<li>
+<a href="gallery.html">作品ギャラリー</a>
+</li>
+<li>
+<a href="index.html#contact">お問い合わせ</a>
+</li>
+</ul>
+</div>
+<div>
+<p>Online Shop</p>
+<ul>
+<li>
+<a href="collection.html">すべての商品</a>
+</li>
+<li>
+<a href="index.html#new-arrivals">新商品</a>
+</li>
+<li>
+<a href="collection.html#categories">カテゴリから探す</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="kmn-footer__bottom">
+<span>© 2026 KM NAGOYA DOLL CO., LTD.</span>
+<span>Made with care in Seto, Japan.</span>
+</div>
+</div>
 </footer>
 
-<script src="assets/drawer.js" defer></script>
+<script src="assets/drawer.js" defer>
+</script>
 </body>
 </html>

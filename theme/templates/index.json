@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "hero": {
+      "type": "kmn-hero",
+      "settings": {}
+    },
+    "new-arrivals": {
+      "type": "kmn-new-arrivals",
+      "settings": {}
+    },
+    "lace-detail": {
+      "type": "kmn-lace-detail",
+      "settings": {}
+    },
+    "collections": {
+      "type": "kmn-collections",
+      "settings": {}
+    },
+    "gallery": {
+      "type": "kmn-gallery",
+      "settings": {}
+    },
+    "story": {
+      "type": "kmn-story",
+      "settings": {}
+    },
+    "contact": {
+      "type": "kmn-contact",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "new-arrivals",
+    "lace-detail",
+    "collections",
+    "gallery",
+    "story",
+    "contact"
+  ]
+}

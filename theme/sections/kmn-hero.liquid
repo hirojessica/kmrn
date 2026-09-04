@@ -1,0 +1,18 @@
+<div class="kmn"><section class="kmn-hero"><div class="kmn-hero__copy"><p class="kmn-label">Seto, Aichi / Since 1951</p><h1>{{ 'kmn.text_3' | t }}<br>{{ 'kmn.text_4' | t }}</h1><p class="kmn-hero__lead">{{ 'kmn.text_5' | t }}<br>{{ 'kmn.text_6' | t }}</p><div class="kmn-hero__actions"><a class="kmn-button" href="{{ routes.all_products_collection_url }}">{{ 'kmn.text_73' | t }}<img class="kmn-arrow" src="{{ 'icon-arrow.svg' | asset_url }}" width="24" height="24" alt="" aria-hidden="true"></a><a class="kmn-link" href="#new-arrivals">{{ 'kmn.text_2' | t }}<img class="kmn-arrow" src="{{ 'icon-arrow.svg' | asset_url }}" width="24" height="24" alt="" aria-hidden="true"></a></div></div><figure class="kmn-hero__photo">{% if section.settings.image != blank %}{{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 750, 1100, 1600', sizes: '(min-width: 750px) 50vw, 100vw' }}{% else %}<img src="{{ 'lace-blue.webp' | asset_url }}" alt="{{ 'kmn.text_259' | t | escape }}" class="" loading="eager" fetchpriority="high" width="1080" height="1350">{% endif %}<figcaption>PORCELAIN LACE DOLL / SETO, JAPAN</figcaption></figure></section><div class="kmn-strip"><span>{{ 'kmn.text_7' | t }}</span><span>{{ 'kmn.text_8' | t }}</span><span>{{ 'kmn.text_9' | t }}</span></div></div>
+{% schema %}
+{
+  "name": "KM hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "ヒーロー画像"
+    }
+  ],
+  "presets": [
+    {
+      "name": "KM hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,3 +1,7 @@
+# 最新状況 2026-09-05
+
+作品写真中心のプレビューとDawnベースのShopifyテーマを実装しました。最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。下記の旧動画仕様・未着手記述は過去時点です。
+
 # 引き継ぎドキュメント（HANDOFF）
 
 最終更新: 2026-09-03（Codexによる日英切替・ブラウザ言語判定・Googleマップ反映）

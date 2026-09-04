@@ -1,3 +1,7 @@
+# 新デザインプレビュー 2026-09-05
+
+最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。静的プレビューは `mockups/`、Shopify用テーマは `theme/` です。
+
 # KM名古屋ドール株式会社 コーポレート×EC サイトリニューアル
 
 Shopify を基盤とした「コーポレートサイト + ECサイト」統合リニューアルプロジェクト。

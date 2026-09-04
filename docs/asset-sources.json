@@ -1,0 +1,38 @@
+{
+  "lace-blue.webp": {
+    "source": "E:\\project-folder\\image\\0730.webp",
+    "sha256": "816c28499e083ed8902dc5ddc6493c6899ebd6ac1eeb68030fc932fc483c6ac8"
+  },
+  "lace-painting.webp": {
+    "source": "E:\\project-folder\\image\\IMG_0001.webp",
+    "sha256": "4bb6445fdf07e0725b88fd93656155f850e6c83b185c386686538c0515d98997"
+  },
+  "poodles.webp": {
+    "source": "E:\\project-folder\\image\\P1022106_r.webp",
+    "sha256": "4da2c479868c602f82d6296c7edc3fc257cbe5d1b5a505121361103864864387"
+  },
+  "prince-princess.webp": {
+    "source": "E:\\project-folder\\image\\P1022130_r.webp",
+    "sha256": "82e52ba184c68cb9990a886f9f90d4237bb3c4f8b08af4932fa365672e5e3d2c"
+  },
+  "japanese-doll.webp": {
+    "source": "E:\\project-folder\\image\\P1022098_r.webp",
+    "sha256": "12b5b737c044343b0919c7d5f021fbf41a1f948ac87233faf947e6898f35c64c"
+  },
+  "workshop.webp": {
+    "source": "E:\\project-folder\\image\\上絵付.webp",
+    "sha256": "21ee1e3a8d8881bef207b7f1d94560da562c5f811e7578d7a3c091bf42fdfc89"
+  },
+  "clay.webp": {
+    "source": "E:\\project-folder\\image\\IMG_2195.webp",
+    "sha256": "b772987764eea4ef29a4de3c873192b72ccaf77bf75d380fd20a38d8a4071ac0"
+  },
+  "mold.webp": {
+    "source": "E:\\project-folder\\image\\genkei1.webp",
+    "sha256": "db998f12788156eb45e2b9fac67d754863917fa5b623773f5067d6b95b693c00"
+  },
+  "panda-teapot.jpg": {
+    "source": "E:\\project-folder\\image\\luminous-donut-panda-teapot.jpg",
+    "sha256": "97cfaf566f505886e36386cd62e06b74c5db068f707568bd45b9ccd6dcb17e3e"
+  }
+}

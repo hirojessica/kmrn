@@ -1,6 +1,6 @@
-# Local AI assistant permissions
+mockups/*.local.html
+dist/
+qa/
 .claude/settings.local.json
-
-# OS-generated files
 Thumbs.db
 .DS_Store
