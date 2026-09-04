@@ -1,4 +1,8 @@
-# 新デザインプレビュー 2026-09-05
+# 公開プレビューを旧版へ復元 2026-09-05
+
+採用された提案画像との再現度が不足していたため、公開対象の `mockups/` を変更前のコミット `2237613` と同じ内容へ戻しました。新デザインを完成・承認済みとして扱わないでください。復元記録は [docs/07-preview-restored.md](docs/07-preview-restored.md)。
+
+以下は復元前の実装記録です。
 
 最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。静的プレビューは `mockups/`、Shopify用テーマは `theme/` です。
 

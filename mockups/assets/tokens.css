@@ -69,16 +69,3 @@
   --transition: 0.25s ease;
   --focus-ring: 2px solid var(--c-gold);
 }
-
-/* Gallery renewal — 2026-09-05 */
-:root {
- --km-wide: 1440px; --km-gutter: clamp(24px, 5.5vw, 88px);
- --km-hero-height: min(660px, 78vw); --km-hero-type: clamp(40px, 4.7vw, 72px);
- --km-heading: clamp(27px, 3vw, 42px); --km-logo: 190px;
- --km-header: 88px; --km-rule: 1px; --km-icon: 24px; --km-touch: 44px;
- --km-copy: 440px; --km-card-title: 19px; --km-hero-leading: 1.65;
- --km-tracking: .13em; --km-scrim: rgba(20,24,21,.75);
- --km-overlay: rgba(250,248,244,.95); --km-outline-offset: 4px;
- --km-caption: 11px; --km-dialog: 1050px; --km-mobile-image: 420px;
- --km-mobile-hero-type: 38px; --km-card-ratio: 4 / 5;
-}

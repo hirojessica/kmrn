@@ -1,5 +1,7 @@
 # 最新状況 2026-09-05
 
+**最優先: 公開プレビューを旧版2237613へ復元。** 提案画像と新実装の写真・構図・画像サイズが一致せず、ユーザーから品質不足の指摘を受けました。新テーマを完成・承認済みとして扱わず、今回の新デザインを再公開しないでください。`mockups/` は旧版と同一に戻し、`theme/` は未公開の実装記録として保持しています。詳細は [docs/07-preview-restored.md](docs/07-preview-restored.md)。以下は復元前の履歴です。
+
 作品写真中心のプレビューとDawnベースのShopifyテーマを実装しました。最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。下記の旧動画仕様・未着手記述は過去時点です。
 
 GitHub Pagesの新デザイン公開と、Shopify下書きテーマID `190615552282` への追加を確認済み。ストアのデフォルト言語は承認を得て日本語へ変更済み。今回の作業チェックアウトは `C:\Users\Janne\Documents\KMN\work\kmrn-gallery-renewal`。E:\KMNAGOYAECと現行サイトのE:\project-folderは変更していません。

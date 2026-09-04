@@ -1,5 +1,13 @@
 # Design QA — 2026-09-05
 
+## Superseding review: fidelity failed; preview restored
+
+The user rejected the new implementation for failing to reproduce the approved visual, inconsistent image presentation and degraded perceived image quality. The earlier fidelity pass below is withdrawn. Functional smoke checks do not establish visual fidelity.
+
+P1 findings: substituted doll photography and untreated workshop background; changed hero proportions and image scale; changed the source page sequence. Later image-generation extraction trials also altered the doll face and lace details and were not accepted or deployed.
+
+The public mockups are restored to 2237613. Restoration validation compares the complete mockups tree to that baseline and verifies the deployed page. The original target reproduction remains incomplete. Sections below are historical evidence of the rejected implementation.
+
 Scope: redesigned static home, gallery, shop entrance and shared navigation; Shopify theme source validation and uploaded draft-theme smoke checks.
 
 ## Visual truth and evidence
@@ -46,7 +54,7 @@ Scope: redesigned static home, gallery, shop entrance and shared navigation; Sho
 - Existing lower corporate/news content retains earlier preview material. This pass changes shared navigation, home, gallery and shop entrance.
 - P3: dedicated studio photographs and uniform product-photo framing will bring the hero closer to the original generated concept.
 
-final result: passed
+final result: blocked
 
 This result applies to the static preview and the specific draft-theme checks below; it does not certify production commerce.
 
