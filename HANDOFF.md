@@ -2,6 +2,8 @@
 
 作品写真中心のプレビューとDawnベースのShopifyテーマを実装しました。最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。下記の旧動画仕様・未着手記述は過去時点です。
 
+GitHub Pagesの新デザイン公開と、Shopify下書きテーマID `190615552282` への追加を確認済み。ストアのデフォルト言語は承認を得て日本語へ変更済み。今回の作業チェックアウトは `C:\Users\Janne\Documents\KMN\work\kmrn-gallery-renewal`。E:\KMNAGOYAECと現行サイトのE:\project-folderは変更していません。
+
 # 引き継ぎドキュメント（HANDOFF）
 
 最終更新: 2026-09-03（Codexによる日英切替・ブラウザ言語判定・Googleマップ反映）

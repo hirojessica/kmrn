@@ -1,6 +1,6 @@
 # Design QA — 2026-09-05
 
-Scope: redesigned static home, gallery, shop entrance and shared navigation; Shopify theme source validation.
+Scope: redesigned static home, gallery, shop entrance and shared navigation; Shopify theme source validation and uploaded draft-theme smoke checks.
 
 ## Visual truth and evidence
 
@@ -41,11 +41,22 @@ Scope: redesigned static home, gallery, shop entrance and shared navigation; Sho
 
 ## Limits / follow-up
 
-- Shopify upload is pending Chrome file-upload capability. Theme source passing checks is not evidence of a live Shopify connection. Rendering and saving gallery uploads inside Shopify still need verification after upload.
+- Shopify theme 190615552282 is installed as a draft. Its gallery block fields were inspected; the temporary empty block was undone. Selecting a new image, uploading it, and saving a gallery entry end to end remain untested.
 - No real product data exists yet, so product purchase, inventory and checkout were not transaction-tested.
 - Existing lower corporate/news content retains earlier preview material. This pass changes shared navigation, home, gallery and shop entrance.
 - P3: dedicated studio photographs and uniform product-photo framing will bring the hero closer to the original generated concept.
 
 final result: passed
 
-This result applies to the static design preview. Shopify integration status: pending upload and live validation.
+This result applies to the static preview and the specific draft-theme checks below; it does not certify production commerce.
+
+## Uploaded theme and Pages verification
+
+- GitHub Pages deployment for cafcf9f succeeded (Actions run 33923506136); the public homepage displays the new hero and works gallery.
+- Shopify theme ID 190615552282 appears under draft themes; Rise remains the current theme.
+- After explicit user approval, Japanese was saved as the store default and verified in the rendered storefront.
+- Desktop Japanese: qa/shopify-desktop-ja.png; Shopify editor mobile preview: qa/shopify-mobile-ja.png. The mobile menu opens and closes.
+- Shopify gallery photo dialog opens and closes with Escape. All 24 custom-section image elements on the homepage loaded; no broken artwork was found.
+- Home shop CTA opens the native Shopify collection with zero products; cart opens the native empty-cart page. No console errors were captured for that preview tab.
+- English headline wrapped into four lines under the original Japanese tracking. Added a locale-specific rule using the existing English font and type tokens; saved it to the uploaded theme and verified the rule is present in the Shopify CDN CSS.
+- English correction verified in the matching static CSS at desktop and 320px: exactly two heading lines, no horizontal overflow. Evidence: qa/home-desktop-en-final.png and qa/home-mobile-en-final.png. Shopify currently publishes Japanese only; additional language activation remains separate work.

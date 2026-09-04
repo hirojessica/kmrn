@@ -124,3 +124,5 @@
 @media (prefers-reduced-motion:reduce) {html {scroll-behavior:auto;}.kmn * {transition:none!important;}}
 
 @media(max-width:600px){.kmn-hero__actions{gap:var(--sp-4)}.kmn-hero__actions .kmn-button{gap:var(--sp-4);padding-inline:var(--sp-4)}.kmn-hero__actions .kmn-link{gap:var(--sp-2)}}
+/* Latin copy needs a narrower measure than the Japanese display headline. */
+html:lang(en) .kmn-hero h1 {font-family:var(--font-en);font-size:var(--fs-hero);letter-spacing:normal;line-height:var(--lh-heading);}
