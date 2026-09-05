@@ -77,6 +77,22 @@ export function createStorefrontClient(config = storefrontConfig, fetchImpl = (.
       if (!Array.isArray(data.metaobjects?.nodes) || !data.metaobjects.pageInfo) throw new StorefrontError('RESPONSE', 'Invalid gallery response');
       return data.metaobjects;
     },
+    async galleryByHandles(handles, { language = 'JA', signal } = {}) {
+      if (!Array.isArray(handles) || handles.length > 20 || handles.some(handle => typeof handle !== 'string' || !handle || handle.length > 255)) {
+        throw new StorefrontError('CONFIG', 'Invalid gallery handles');
+      }
+      const unique = [...new Set(handles)];
+      if (!unique.length) return [];
+      const variables = { language };
+      unique.forEach((handle, index) => { variables[`handle${index}`] = { type: 'gallery_item', handle }; });
+      const declarations = unique.map((_, index) => `$handle${index}: MetaobjectHandleInput!`).join(', ');
+      const fields = unique.map((_, index) => `photo${index}: metaobject(handle: $handle${index}) {
+        id handle fields { key value reference { ... on MediaImage { image { url altText width height } } } }
+      }`).join('\n');
+      const data = await request(`query GalleryPhotos($language: LanguageCode!, ${declarations}) @inContext(language: $language) { ${fields} }`, variables, signal);
+      if (unique.some((_, index) => !Object.hasOwn(data, `photo${index}`))) throw new StorefrontError('RESPONSE', 'Invalid gallery photos response');
+      return unique.map((_, index) => data[`photo${index}`]).filter(Boolean);
+    },
     async products({ first = 12, after = null, sort = 'newest', language = 'JA', signal } = {}) {
       const data = await request(`query Products($first: Int!, $after: String, $sortKey: ProductSortKeys!, $reverse: Boolean!, $country: CountryCode!, $language: LanguageCode!) @inContext(country: $country, language: $language) {
         products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse) {

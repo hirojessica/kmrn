@@ -1,0 +1,4 @@
+/* Keep the approved frames and show each supplied photograph in full. */
+.s-process-full__media { aspect-ratio:4 / 3; background:var(--c-porcelain); }
+.s-process-full__media > img { width:100%; height:100%; object-fit:contain; }
+.lr-atelier-photo > img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }

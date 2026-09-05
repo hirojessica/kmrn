@@ -29,6 +29,25 @@ test('CMS permission/configuration errors do not become empty publication lists'
     await assert.rejects(blocked[method](), error => error.code === 'API');
   }
 });
+test('fixed process photos resolve by handle without relying on gallery pagination', async () => {
+  let sent;
+  const client = createStorefrontClient(config, async (_, options) => {
+    sent = JSON.parse(options.body);
+    return response({ data: { photo0: { handle: 'kmn-gallery-01', fields: [] }, photo1: null } });
+  });
+  const photos = await client.galleryByHandles(['kmn-gallery-01', 'draft-photo', 'kmn-gallery-01']);
+  assert.deepEqual(photos.map(photo => photo.handle), ['kmn-gallery-01']);
+  assert.deepEqual(sent.variables.handle0, { type: 'gallery_item', handle: 'kmn-gallery-01' });
+  assert.deepEqual(sent.variables.handle1, { type: 'gallery_item', handle: 'draft-photo' });
+  assert.equal(sent.variables.handle2, undefined);
+  assert.doesNotMatch(sent.query, /kmn-gallery-01|first:|mutation/);
+  assert.deepEqual(await client.galleryByHandles([]), []);
+});
+test('malformed photo lookup responses remain failures rather than unpublished photos', async () => {
+  const client = createStorefrontClient(config, async () => response({ data: {} }));
+  await assert.rejects(client.galleryByHandles(['kmn-gallery-01']), error => error.code === 'RESPONSE');
+  await assert.rejects(client.galleryByHandles(['']), error => error.code === 'CONFIG');
+});
 test('article routing uses a variable and unpublished articles return NOT_FOUND', async () => {
   let sent;
   const client = createStorefrontClient(config, async (_, options) => {
