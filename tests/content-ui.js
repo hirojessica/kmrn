@@ -1,5 +1,5 @@
-import { initContentList, articleFragment } from '../mockups/assets/content.js';
-import { detailView, descriptionText } from '../mockups/assets/shop.js';
+import { initContentList, initArticle, articleFragment } from '../mockups/assets/content.js';
+import { initCatalog, detailView, descriptionText } from '../mockups/assets/shop.js';
 import { storefrontConfig } from '../mockups/assets/storefront-config.js';
 const results = [], output = document.querySelector('#results');
 function assert(value, name) { if (!value) throw new Error(name); results.push('PASS '+name); output.textContent = results.join('\n'); }
@@ -58,6 +58,29 @@ try {
   assert(document.querySelector('#lightbox-title').textContent==='English photo title' && document.querySelector('#gallery-lightbox p').textContent==='English photo description', 'English lightbox retains the translated title and caption');
   document.documentElement.lang='ja'; document.dispatchEvent(new CustomEvent('kmn:languagechange',{detail:{language:'ja'}})); await tick(gallery);
   assert(!document.querySelector('#gallery-lightbox').open && gallery.querySelector('h2').textContent==='写真のテスト' && gallery.querySelector('.news-tag').textContent==='制作工程', 'Changing language closes a stale lightbox and restores Japanese gallery copy');
+  const localizedArticle=root('article');
+  localizedArticle.insertAdjacentHTML('beforeend','<div data-article-body></div>');
+  const articleCalls=[], catalogCalls=[];
+  const translations={JA:{title:'工房便り',contentHtml:'<h2>工房の手仕事</h2><p>日本語の本文</p><figure><img src="https://example.com/photo.jpg" alt="上絵作業"><figcaption>上絵作業</figcaption></figure>'},EN:{title:'Workshop Journal',contentHtml:'<h2>Inside the workshop</h2><p>English article</p><figure><img src="https://example.com/photo.jpg" alt="Overglaze painting"><figcaption>Overglaze painting</figcaption></figure>'}};
+  await initArticle(localizedArticle,{article:async(handle,{language})=>{articleCalls.push(language);return {...article,...translations[language]};}});
+  const localizedCatalog=document.createElement('section'); localizedCatalog.dataset.storefront='featured';
+  localizedCatalog.innerHTML='<div data-shop-status></div><div data-product-grid></div>';
+  document.querySelector('#fixture').append(localizedCatalog);
+  const productCopy={JA:{title:'陶製レース人形',descriptionHtml:'<p>日本語の商品説明</p>'},EN:{title:'Porcelain Lace Doll',descriptionHtml:'<p>English product description</p>'}};
+  initCatalog(localizedCatalog,{products:async({language})=>{catalogCalls.push(language);return {nodes:[{...testProduct,...productCopy[language],handle:'lace-doll'}],pageInfo};}});
+  const settled=async(node,selector)=>{for(let i=0;i<100&&node.querySelector(selector).getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,10));};
+  await settled(localizedCatalog,'[data-product-grid]');
+  assert(localizedArticle.querySelector('h1').textContent==='工房便り'&&localizedCatalog.querySelector('h3').textContent==='陶製レース人形','Japanese article and featured product use Shopify Japanese titles');
+  document.documentElement.lang='en'; document.dispatchEvent(new CustomEvent('kmn:languagechange'));
+  await settled(localizedArticle,'[data-article-body]');await settled(localizedCatalog,'[data-product-grid]');
+  assert(articleCalls.at(-1)==='EN'&&catalogCalls.at(-1)==='EN','Language selection reaches both article and featured product requests');
+  assert(localizedArticle.querySelector('h1').textContent==='Workshop Journal'&&!/[ぁ-んァ-ヶ一-龯]/.test(localizedArticle.querySelector('.article-body').textContent)&&localizedArticle.querySelector('figcaption').textContent==='Overglaze painting','English articles show only translated rich text and photo captions');
+  assert(localizedCatalog.querySelector('h3').textContent==='Porcelain Lace Doll','Featured product names change to the Shopify English translation');
+  const englishDetail=detailView({...testProduct,...productCopy.EN},false);
+  assert(englishDetail.querySelector('.shop-description').textContent==='English product description'&&englishDetail.querySelector('.shop-purchase').textContent==='Try test checkout'&&!englishDetail.querySelector('.shop-purchase').disabled,'Translated product descriptions preserve the guarded test checkout');
+  document.documentElement.lang='ja'; document.dispatchEvent(new CustomEvent('kmn:languagechange'));
+  await settled(localizedArticle,'[data-article-body]');await settled(localizedCatalog,'[data-product-grid]');
+  assert(localizedArticle.querySelector('h1').textContent==='工房便り'&&localizedArticle.querySelector('img').alt==='上絵作業'&&localizedCatalog.querySelector('h3').textContent==='陶製レース人形','Switching back restores Japanese article copy, image alternatives and product names');
   const stale=root('news'); let firstResolve, request=0;
   const staleClient={news:()=> ++request === 1 ? new Promise(resolve=>firstResolve=resolve) : Promise.resolve({nodes:[{...article,id:'new',title:'Latest language'}],pageInfo})};
   const first=initContentList(stale,staleClient);
