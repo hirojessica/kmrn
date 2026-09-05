@@ -4,6 +4,43 @@ import { createStorefrontClient, formatMoney, safeImageURL } from '../mockups/as
 const config = { domain: 'example.myshopify.com', apiVersion: '2026-04', country: 'JP', publicAccessToken: '' };
 const response = (data, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => data });
 
+test('CMS queries paginate the intended public blog and gallery without customer access', async () => {
+  const requests = [];
+  const page = { nodes: [], pageInfo: { hasNextPage: true, endCursor: 'next' } };
+  const client = createStorefrontClient(config, async (_, options) => {
+    const body = JSON.parse(options.body); requests.push(body);
+    return response({ data: body.query.includes('query Gallery') ? { metaobjects: page } : { blog: { articles: page } } });
+  });
+  assert.equal((await client.news({ after: 'older', language: 'EN' })).pageInfo.endCursor, 'next');
+  assert.equal((await client.gallery({ first: 24 })).nodes.length, 0);
+  assert.match(requests[0].query, /blog\(handle: "news"\)/);
+  assert.match(requests[0].query, /PUBLISHED_AT, reverse: true/);
+  assert.equal(requests[0].variables.after, 'older');
+  assert.equal(requests[0].variables.language, 'EN');
+  assert.match(requests[1].query, /type: "gallery_item"/);
+  assert.equal(requests[1].variables.first, 24);
+  assert.doesNotMatch(JSON.stringify(requests), /mutation|customers|orders/);
+});
+test('CMS permission/configuration errors do not become empty publication lists', async () => {
+  for (const method of ['news', 'gallery']) {
+    const malformed = createStorefrontClient(config, async () => response({ data: {} }));
+    await assert.rejects(malformed[method](), error => ['RESPONSE','NOT_FOUND'].includes(error.code));
+    const blocked = createStorefrontClient(config, async () => response({ errors: [{ message: 'Access denied' }] }));
+    await assert.rejects(blocked[method](), error => error.code === 'API');
+  }
+});
+test('article routing uses a variable and unpublished articles return NOT_FOUND', async () => {
+  let sent;
+  const client = createStorefrontClient(config, async (_, options) => {
+    sent = JSON.parse(options.body);
+    return response({ data: { blog: { articleByHandle: null } } });
+  });
+  await assert.rejects(client.article('unpublished'), error => error.code === 'NOT_FOUND');
+  assert.equal(sent.variables.handle, 'unpublished');
+  assert.match(sent.query, /articleByHandle\(handle: \$handle\)/);
+  await assert.rejects(client.article(''), error => error.code === 'NOT_FOUND');
+});
+
 test('reads products with pagination, price sorting, language and no browser credentials', async () => {
   let captured;
   const client = createStorefrontClient(config, async (url, options) => {

@@ -1,3 +1,8 @@
+## 2026-09-05 コンテンツ管理の追加
+
+お知らせと記事詳細を新デザインへ統一。会社案内も共通ヘッダー・フッターに更新し、ギャラリー・お問い合わせ・送信後ページを追加しました。Shopifyのブログとメタオブジェクトから公開内容を取得します。
+
+操作方法・API権限・お問い合わせの開通状況は [docs/09-content-management.md](docs/09-content-management.md) を参照してください。FormSubmitの初回確認メールを送信し、受信者による有効化完了の回答を受けて、送信ボタンを開通しています。
 # 最新デモをGitHub Pagesへ反映 2026-09-05
 
 ユーザーの「Githubページにも反映してほしい」という依頼に基づき、確認中のローカルデモ `work/kmn-layout-review` を公開対象の `mockups/` に反映しました。公開URLは https://hirojessica.github.io/kmrn/ 、デプロイ元は `hirojessica/kmrn` の `main` です。

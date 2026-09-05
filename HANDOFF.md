@@ -1,3 +1,8 @@
+## 2026-09-05 コンテンツ管理の追加
+
+お知らせと記事詳細を新デザインへ統一。会社案内も共通ヘッダー・フッターに更新し、ギャラリー・お問い合わせ・送信後ページを追加しました。Shopifyのブログとメタオブジェクトから公開内容を取得します。
+
+操作方法・API権限・お問い合わせの開通状況は [docs/09-content-management.md](docs/09-content-management.md) を参照してください。FormSubmitの初回確認メールを送信し、受信者による有効化完了の回答を受けて、送信ボタンを開通しています。
 # 最新状況 2026-09-05
 
 **最新指示: 確認済みローカルデモをGitHub Pagesへ反映。** ユーザーが2026-09-05に明示的に依頼しました。再現素材、境界のぼかし、調整済みのヘッダー余白、Noto Sans JP、同じヘッダー／フッターの商品一覧・詳細、Shopify商品API接続を `mockups/` にコピーしています。反映先は `hirojessica/kmrn` の `main`、公開対象は `mockups/` です。詳細は [docs/08-approved-demo-pages.md](docs/08-approved-demo-pages.md)。

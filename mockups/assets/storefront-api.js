@@ -46,6 +46,37 @@ export function createStorefrontClient(config = storefrontConfig, fetchImpl = (.
     }
   }
   return {
+    async news({ first = 12, after = null, language = 'JA', signal } = {}) {
+      const data = await request(`query News($first: Int!, $after: String, $language: LanguageCode!) @inContext(language: $language) {
+        blog(handle: "news") { articles(first: $first, after: $after, sortKey: PUBLISHED_AT, reverse: true) {
+          nodes { id handle title publishedAt excerpt tags image { url altText width height } }
+          pageInfo { hasNextPage endCursor }
+        } }
+      }`, { first, after, language }, signal);
+      if (!data.blog) throw new StorefrontError('NOT_FOUND', 'News blog not found');
+      if (!Array.isArray(data.blog.articles?.nodes) || !data.blog.articles.pageInfo) throw new StorefrontError('RESPONSE', 'Invalid news response');
+      return data.blog.articles;
+    },
+    async article(handle, { language = 'JA', signal } = {}) {
+      if (!handle || handle.length > 255) throw new StorefrontError('NOT_FOUND', 'Missing article handle');
+      const data = await request(`query NewsArticle($handle: String!, $language: LanguageCode!) @inContext(language: $language) {
+        blog(handle: "news") { articleByHandle(handle: $handle) {
+          id handle title publishedAt tags contentHtml image { url altText width height }
+        } }
+      }`, { handle, language }, signal);
+      if (!data.blog?.articleByHandle) throw new StorefrontError('NOT_FOUND', 'Article not found');
+      return data.blog.articleByHandle;
+    },
+    async gallery({ first = 24, after = null, language = 'JA', signal } = {}) {
+      const data = await request(`query Gallery($first: Int!, $after: String, $language: LanguageCode!) @inContext(language: $language) {
+        metaobjects(type: "gallery_item", first: $first, after: $after, sortKey: "updated_at", reverse: true) {
+          nodes { id handle fields { key value reference { ... on MediaImage { image { url altText width height } } } } }
+          pageInfo { hasNextPage endCursor }
+        }
+      }`, { first, after, language }, signal);
+      if (!Array.isArray(data.metaobjects?.nodes) || !data.metaobjects.pageInfo) throw new StorefrontError('RESPONSE', 'Invalid gallery response');
+      return data.metaobjects;
+    },
     async products({ first = 12, after = null, sort = 'newest', language = 'JA', signal } = {}) {
       const data = await request(`query Products($first: Int!, $after: String, $sortKey: ProductSortKeys!, $reverse: Boolean!, $country: CountryCode!, $language: LanguageCode!) @inContext(country: $country, language: $language) {
         products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse) {

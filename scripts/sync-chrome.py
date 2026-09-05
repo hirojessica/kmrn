@@ -8,7 +8,7 @@ sections = {
     'footer': r'<footer class="lr-footer">.*?</footer>',
     'menu': r'<dialog id="mobile-menu".*?</dialog>',
 }
-for name in ['index.html', 'collection.html', 'product.html']:
+for name in ['index.html', 'collection.html', 'product.html', 'about.html', 'news.html', 'news-article.html', 'gallery.html', 'contact.html', 'contact-thanks.html']:
     path = repo / 'mockups' / name
     source = path.read_text(encoding='utf-8')
     for section, pattern in sections.items():
