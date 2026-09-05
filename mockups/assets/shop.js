@@ -1,5 +1,6 @@
 import { storefront, formatMoney, safeImageURL } from './storefront-api.js';
 import { storefrontConfig } from './storefront-config.js';
+import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js';
 
 const language = () => document.documentElement.lang === 'en' ? 'en' : 'ja';
 const t = (ja, en) => language() === 'en' ? en : ja;
@@ -37,6 +38,19 @@ function priceRange(product) {
   const value = formatMoney(min, language());
   return value && max && Number(max.amount) > Number(min.amount) ? `${value}${t('〜', '+')}` : value;
 }
+export function descriptionText(product) {
+  if (!product.descriptionHtml) return product.description || '';
+  const doc = new DOMParser().parseFromString(product.descriptionHtml, 'text/html');
+  const blocked = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED']);
+  const block = new Set(['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'BLOCKQUOTE']);
+  function text(node) {
+    if (node.nodeType === 3) return node.textContent;
+    if (blocked.has(node.nodeName)) return '';
+    if (node.nodeName === 'BR') return '\n';
+    return Array.from(node.childNodes).map(text).join('') + (block.has(node.nodeName) ? '\n\n' : '');
+  }
+  return text(doc.body).replace(/\n{3,}/g, '\n\n').trim();
+}
 function card(product, sample = false) {
   const link = element('a', 'shop-card');
   const title = sample ? product[language()] : product.title;
@@ -47,7 +61,8 @@ function card(product, sample = false) {
   if (sample) link.append(element('p', '', t('レイアウトサンプル', 'Layout sample')));
   else {
     const price = priceRange(product);
-    if (price) link.append(element('p', 'shop-price', price));
+    if (price) link.append(element('p', 'shop-price', isTestProduct(product) ? t(`テスト価格 ${price}`, `Test price ${price}`) : price));
+    if (isTestProduct(product)) link.append(element('p', 'shop-test-label', t('テスト商品・実際の発送はありません', 'Test product · No actual shipment')));
     if (!product.availableForSale) link.append(element('span', 'shop-sold-out', t('品切れ', 'Sold out')));
   }
   return link;
@@ -102,7 +117,8 @@ export function initCatalog(root, client = storefront) {
       renderedLanguage = requestLanguage;
       if (!products.length) {
         showStatus(status, 'empty', t('オンライン販売の準備をしています。', 'Our online shop is coming soon.'), t('販売する作品が公開されるまで、どうぞお待ちください。', 'Please check back when our pieces are ready.'));
-      } else showStatus(status, 'ready', '', featured ? '' : t(`${unique.length}点を表示`, `${unique.length} pieces shown`));
+      } else if (unique.some(isTestProduct)) showStatus(status, 'preview', t('テスト商品を公開しています', 'Test products on display'), t('掲載価格・在庫は動作確認用です。テスト決済のみご利用いただけます。実際の販売・発送は行いません。', 'Prices and stock are for testing. Only test payments are available; no actual sale or shipment will take place.'));
+      else showStatus(status, 'ready', '', featured ? '' : t(`${unique.length}点を表示`, `${unique.length} pieces shown`));
       if (sort) sort.disabled = !products.length;
       if (more) { more.hidden = !pageInfo.hasNextPage; more.disabled = false; }
     } catch (error) {
@@ -129,6 +145,7 @@ export function initCatalog(root, client = storefront) {
 
 export function detailView(product, sample) {
   const title = sample ? product[language()] : product.title;
+  const mode = sample ? null : checkoutMode(product, storefrontConfig);
   const layout = element('div', 'shop-detail');
   const gallery = element('div', 'shop-gallery');
   const photo = element('div', 'shop-detail-photo');
@@ -154,18 +171,18 @@ export function detailView(product, sample) {
     gallery.append(thumbnails);
   }
   const copy = element('div', 'shop-detail-copy');
-  copy.append(element('p', 'lr-label', sample ? 'LAYOUT SAMPLE' : 'FROM OUR SETO ATELIER'), element('h1', '', title));
+  copy.append(element('p', 'lr-label', sample ? 'LAYOUT SAMPLE' : isTestProduct(product) ? 'TEST PRODUCT' : 'FROM OUR SETO ATELIER'), element('h1', '', title));
   const price = element('p', 'shop-detail-price', sample ? t('価格は商品登録後に表示', 'Price shown after product setup') : priceRange(product));
   copy.append(price);
-  copy.append(element('p', 'shop-description', sample ? t('こちらは商品詳細ページのレイアウトサンプルです。\n\n実際の商品名、写真、説明、価格をShopifyに登録すると、この位置に表示されます。写真は同じ比率の枠に収め、作品全体が見えるように表示します。', 'This is a layout sample for a product detail page.\n\nProduct names, photos, descriptions and prices will be loaded from Shopify. Images fit within a consistent frame so the entire piece remains visible.') : product.description));
+  copy.append(element('p', 'shop-description', sample ? t('こちらは商品詳細ページのレイアウトサンプルです。\n\n実際の商品名、写真、説明、価格をShopifyに登録すると、この位置に表示されます。写真は同じ比率の枠に収め、作品全体が見えるように表示します。', 'This is a layout sample for a product detail page.\n\nProduct names, photos, descriptions and prices will be loaded from Shopify. Images fit within a consistent frame so the entire piece remains visible.') : descriptionText(product)));
   const variants = product.variants?.nodes || [];
   let selected = variants.find(variant => variant.availableForSale) || variants[0];
   const purchase = element('button', 'lr-button shop-purchase');
   purchase.type = 'button';
   const updateVariant = () => {
-    if (selected) price.textContent = formatMoney(selected.price, language());
-    purchase.disabled = sample || !storefrontConfig.checkoutEnabled || !selected?.availableForSale || !!product.variants?.pageInfo?.hasNextPage;
-    purchase.textContent = sample || !storefrontConfig.checkoutEnabled ? t('オンライン販売準備中', 'Online sales coming soon') : selected?.availableForSale ? t('購入手続きへ', 'Proceed to checkout') : t('品切れ', 'Sold out');
+    if (selected) { const amount = formatMoney(selected.price, language()); price.textContent = isTestProduct(product) ? t(`テスト価格 ${amount}`, `Test price ${amount}`) : amount; }
+    purchase.disabled = sample || !checkoutURL(product, selected, storefrontConfig);
+    purchase.textContent = !mode ? t('オンライン販売準備中', 'Online sales coming soon') : !selected?.availableForSale ? t('品切れ', 'Sold out') : mode === 'test' ? t('テスト購入へ進む', 'Try test checkout') : t('購入手続きへ', 'Proceed to checkout');
   };
   if (variants.length > 1) {
     const label = element('label', 'shop-variant', t('種類', 'Variant'));
@@ -186,10 +203,19 @@ export function detailView(product, sample) {
   updateVariant();
   purchase.addEventListener('click', () => {
     if (purchase.disabled) return;
-    const variantId = /^gid:\/\/shopify\/ProductVariant\/(\d+)$/.exec(selected?.id || '')?.[1];
-    if (variantId) location.assign(`https://${storefrontConfig.domain}/cart/${variantId}:1`);
+    const url = checkoutURL(product, selected, storefrontConfig);
+    if (url) location.assign(url);
   });
-  copy.append(purchase, element('p', 'shop-detail-note', sample || !storefrontConfig.checkoutEnabled ? t('デモページでは購入できません。', 'Purchases are unavailable in this demo.') : t('お支払いはShopifyの決済画面へ進みます。', 'Payment continues at Shopify checkout.')));
+  copy.append(purchase, element('p', 'shop-detail-note', !mode ? t('デモページでは購入できません。', 'Purchases are unavailable in this demo.') : mode === 'test' ? t('Shopifyのテスト決済画面へ進みます。実際の請求・発送はありません。', 'Continue to Shopify test checkout. No actual charge or shipment will occur.') : t('お支払いはShopifyの決済画面へ進みます。', 'Payment continues at Shopify checkout.')));
+  if (mode === 'test') {
+    const instructions = element('details', 'shop-test-guide');
+    instructions.append(element('summary', '', t('テスト購入の入力方法', 'How to place a test order')));
+    instructions.append(element('p', '', t('決済画面にテストモードの表示があることを確認してください。ご自身が受信できるメールアドレスを入力すると、テスト注文の確認メールも確認できます。', 'Check that checkout displays test mode. Use an email address you can access to receive the test order confirmation.')));
+    const list = element('ul');
+    [t('カード番号：1（成功）／2（決済拒否）／3（エラー）', 'Card number: 1 (success), 2 (decline), or 3 (gateway error)'), t('カード名義：Test payment gateway', 'Name on card: Test payment gateway'), t('有効期限：未来の年月、セキュリティコード：111', 'Expiry: any future date. Security code: 111.')].forEach(text => list.append(element('li', '', text)));
+    instructions.append(list, element('p', '', t('実際のカード番号は入力しないでください。ストアパスワードを求められた場合は、Shopifyのオンラインストア設定で確認できます。', 'Use only the test card details. If a store password is requested, find it in Shopify online store preferences.')));
+    copy.append(instructions);
+  }
   layout.append(gallery, copy);
   document.title = `${title}｜KM${language() === 'ja' ? '名古屋ドール株式会社' : ' Nagoya Doll'}`;
   return layout;

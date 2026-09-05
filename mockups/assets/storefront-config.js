@@ -4,7 +4,14 @@ export const storefrontConfig = Object.freeze({
   apiVersion: '2026-04',
   publicAccessToken: "40f033869664529caa21b1ba07287ac8",
   country: 'JP',
-  // Layout preview only; selling is enabled after the store and checkout are ready.
+  // Live sales stay disabled until the store transfer and production setup are ready.
   checkoutEnabled: false,
+  // Shopify Test payment gateway is active. Turn this off before switching gateways.
+  testCheckoutEnabled: true,
+  testProductIds: Object.freeze([
+    'gid://shopify/Product/10387436699930',
+    'gid://shopify/Product/10387437814042',
+    'gid://shopify/Product/10387438338330',
+  ]),
   showLayoutSamples: true,
 });

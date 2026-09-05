@@ -3,7 +3,7 @@ import { storefrontConfig } from './storefront-config.js';
 export class StorefrontError extends Error {
   constructor(code, message) { super(message); this.name = 'StorefrontError'; this.code = code; }
 }
-const cardFields = `id handle title availableForSale productType
+const cardFields = `id handle title availableForSale productType tags
   featuredImage { url altText width height }
   priceRange { minVariantPrice { amount currencyCode } maxVariantPrice { amount currencyCode } }`;
 const sortOptions = {
@@ -105,7 +105,7 @@ export function createStorefrontClient(config = storefrontConfig, fetchImpl = (.
     async product(handle, { language = 'JA', signal } = {}) {
       if (!handle || handle.length > 255) throw new StorefrontError('NOT_FOUND', 'Missing product handle');
       const data = await request(`query Product($handle: String!, $country: CountryCode!, $language: LanguageCode!) @inContext(country: $country, language: $language) {
-        product(handle: $handle) { ${cardFields} description
+        product(handle: $handle) { ${cardFields} description descriptionHtml
           images(first: 12) { nodes { url altText width height } }
           variants(first: 100) { nodes { id title availableForSale price { amount currencyCode } image { url altText width height } } pageInfo { hasNextPage } }
         }

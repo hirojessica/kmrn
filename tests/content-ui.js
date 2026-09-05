@@ -1,4 +1,6 @@
 import { initContentList, articleFragment } from '../mockups/assets/content.js';
+import { detailView, descriptionText } from '../mockups/assets/shop.js';
+import { storefrontConfig } from '../mockups/assets/storefront-config.js';
 const results = [], output = document.querySelector('#results');
 function assert(value, name) { if (!value) throw new Error(name); results.push('PASS '+name); output.textContent = results.join('\n'); }
 function root(kind) {
@@ -9,6 +11,19 @@ function root(kind) {
 const tick = async node => { for (let i=0; i<100 && node.querySelector('[data-content-list]').getAttribute('aria-busy') === 'true'; i++) await new Promise(resolve=>setTimeout(resolve,10)); };
 const pageInfo = { hasNextPage: false, endCursor: null };
 try {
+  assert(descriptionText({descriptionHtml:'<p>日本語<br>説明</p><p>English description</p><script>ignored</script>'}) === '日本語\n説明\n\nEnglish description', 'Product descriptions retain paragraphs and omit executable content');
+  const testVariant = { id:'gid://shopify/ProductVariant/123', availableForSale:true, price:{amount:'1000',currencyCode:'JPY'} };
+  const testProduct = { id:storefrontConfig.testProductIds[0], title:'Test piece', tags:['kmn-test'], variants:{nodes:[testVariant],pageInfo:{hasNextPage:false}}, featuredImage:{url:'https://cdn.shopify.com/s/files/1/1012/2290/8186/files/kmn-gallery-15.webp?v=1788604493',width:1080,height:1350} };
+  const testDetail = detailView(testProduct,false); document.querySelector('#fixture').append(testDetail);
+  assert(!testDetail.querySelector('.shop-purchase').disabled && testDetail.querySelector('.shop-purchase').textContent==='テスト購入へ進む', 'Prepared test products display an enabled test-only purchase button');
+  assert(testDetail.querySelector('.shop-test-guide').textContent.includes('カード番号：1') && testDetail.querySelector('.shop-detail-note').textContent.includes('実際の請求・発送はありません'), 'Test checkout exposes test instructions and no-charge notice');
+  const image = testDetail.querySelector('.shop-detail-photo img'), frame = image.parentElement;
+  assert(Math.abs(image.getBoundingClientRect().height-frame.getBoundingClientRect().height)<1 && getComputedStyle(image).objectFit==='contain', 'Portrait product photos fit their frame without overflowing');
+  const realDetail=detailView({...testProduct,id:'gid://shopify/Product/999',tags:[]},false);
+  assert(realDetail.querySelector('.shop-purchase').disabled && !realDetail.querySelector('.shop-test-guide'), 'Unrelated products keep purchasing disabled');
+  const soldDetail=detailView({...testProduct,variants:{nodes:[{...testVariant,availableForSale:false}],pageInfo:{hasNextPage:false}}},false);
+  assert(soldDetail.querySelector('.shop-purchase').disabled && soldDetail.querySelector('.shop-purchase').textContent==='品切れ', 'Sold-out test items cannot proceed to checkout');
+  testDetail.remove();
   const rich = document.createElement('div');
   rich.append(articleFragment('<h2>見出し</h2><p><strong>太字</strong><a href="javascript:alert(1)" onclick="alert(1)">リンク</a></p><scr'+'ipt>alert(1)</scr'+'ipt><iframe src="about:blank"></iframe><img src="data:image/svg+xml,x" onerror="alert(1)"><table><tr><td colspan="2">セル</td></tr></table>'));
   assert(rich.querySelector('strong')?.textContent === '太字' && rich.querySelector('.article-table-wrap td')?.colSpan === 2, 'Article rich text and tables are preserved');
