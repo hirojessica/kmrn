@@ -1,3 +1,9 @@
+## 2026-09-05 窯背景とギャラリーの英語表示
+
+会社案内末尾の仮ラベルを削除し、`kmn-gallery-05` の窯写真を背景に追加。写真濃度と彩度は `tokens.css` の `--cta-photo-*` で管理します。日英共通の背景です。
+
+Shopifyの `gallery_item` に `title_en`・`caption_en`・`category_en` を追加し、18枚すべての英訳を登録済み。`assets/gallery-data.js` が日英の写真情報を選び、ギャラリーと各ページの画像で共用します。CMSの英語入力欄で編集でき、追加アプリは使用していません。拡大表示も英語になり、言語切替時に開いている旧言語の写真ダイアログは閉じます。管理・復元方法は [docs/09-content-management.md](docs/09-content-management.md)。
+
 ## 2026-09-05 現行写真の登録
 
 現行ギャラリーの18枚をShopifyのFilesと `gallery_item` に登録済み（Active）。指定された `E:\project-folder\image` を読み取り、ファイル名だけを `kmn-gallery-01` ～ `18` に揃えた同一バイトのコピーをアップロードしました。元フォルダは変更していません。

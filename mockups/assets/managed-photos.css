@@ -2,3 +2,7 @@
 .s-process-full__media { aspect-ratio:4 / 3; background:var(--c-porcelain); }
 .s-process-full__media > img { width:100%; height:100%; object-fit:contain; }
 .lr-atelier-photo > img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+.s-cta__photo { position:absolute; inset:0; pointer-events:none; }
+.s-cta__photo > img { width:100%; height:100%; object-fit:cover; object-position:var(--cta-photo-position); opacity:var(--cta-photo-opacity); filter:saturate(var(--cta-photo-saturation)); }
+.s-cta:has(.s-cta__photo) .s-cta__lead { color:var(--c-white); }
+.s-cta:has(.s-cta__photo) .s-cta__title { text-wrap:balance; }

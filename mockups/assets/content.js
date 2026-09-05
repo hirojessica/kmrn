@@ -1,4 +1,5 @@
 import { storefront, safeImageURL } from './storefront-api.js?v=content-20260905';
+import { localizedGalleryItem } from './gallery-data.js';
 
 const language = () => document.documentElement.lang === 'en' ? 'en' : 'ja';
 const tr = (ja, en) => language() === 'en' ? en : ja;
@@ -35,8 +36,7 @@ function newsRow(article) {
   const arrow = el('span', '→', 'news-arrow'); arrow.setAttribute('aria-hidden', 'true'); a.append(arrow); li.append(a); return li;
 }
 export function galleryItem(node) {
-  const fields = Object.fromEntries((node.fields || []).map(field => [field.key, field]));
-  return { id: node.id, title: fields.title?.value || '', caption: fields.caption?.value || '', category: fields.category?.value || '', image: fields.image?.reference?.image };
+  return localizedGalleryItem(node, language());
 }
 function openPhoto(item, trigger) {
   const dialog = document.querySelector('#gallery-lightbox');
@@ -69,7 +69,11 @@ export function initContentList(root, client = storefront) {
   let controller, generation = 0, cursor = null, entries = [], seen = new Set();
   async function load(append = false) {
     controller?.abort(); controller = new AbortController(); const current = ++generation;
-    if (!append) { entries = []; cursor = null; seen = new Set(); list.replaceChildren(); }
+    if (gallery) root.setAttribute('aria-label', tr('フォトギャラリー', 'Photo Gallery'));
+    if (!append) {
+      if (gallery) document.querySelector('#gallery-lightbox[open]')?.close();
+      entries = []; cursor = null; seen = new Set(); list.replaceChildren();
+    }
     list.setAttribute('aria-busy', 'true'); if (more) more.disabled = true;
     status(root, 'loading', tr('読み込んでいます…', 'Loading…'));
     try {

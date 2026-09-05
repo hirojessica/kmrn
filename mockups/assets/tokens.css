@@ -23,6 +23,9 @@
   --c-celadon-dark: #2E463E;   /* celadon の hover */
   --c-celadon-light: #EAF0ED;  /* 青磁(淡): 淡色背景セクション */
   --c-danger: #A44A3F;         /* 弁柄: 残りわずか・エラー */
+  --cta-photo-opacity: .28;
+  --cta-photo-saturation: .45;
+  --cta-photo-position: center 54%;
 
   /* ---- タイポグラフィ ---- */
   --font-serif: "Shippori Mincho", "Yu Mincho", "YuMincho", serif;

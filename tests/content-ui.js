@@ -35,6 +35,14 @@ try {
   assert(document.querySelector('#gallery-lightbox').open && document.querySelector('#lightbox-title').textContent==='写真のテスト', 'Photo opens in an accessible lightbox');
   document.querySelector('#gallery-lightbox button').click();
   assert(!document.querySelector('#gallery-lightbox').open, 'Photo lightbox closes');
+  good.fields.push({key:'title_en',value:'English photo title'},{key:'caption_en',value:'English photo description'},{key:'category',value:'制作工程'},{key:'category_en',value:'Our Craft'});
+  document.documentElement.lang='en'; document.dispatchEvent(new CustomEvent('kmn:languagechange',{detail:{language:'en'}})); await tick(gallery);
+  assert(gallery.querySelector('h2').textContent==='English photo title' && gallery.querySelector('p').textContent==='English photo description' && gallery.querySelector('.news-tag').textContent==='Our Craft', 'English gallery uses CMS translations for titles, captions and categories');
+  assert(gallery.querySelector('img').alt==='English photo title' && gallery.querySelector('button').getAttribute('aria-label')==='Enlarge English photo title', 'English photo alternative text and controls are translated');
+  gallery.querySelector('button').click();
+  assert(document.querySelector('#lightbox-title').textContent==='English photo title' && document.querySelector('#gallery-lightbox p').textContent==='English photo description', 'English lightbox retains the translated title and caption');
+  document.documentElement.lang='ja'; document.dispatchEvent(new CustomEvent('kmn:languagechange',{detail:{language:'ja'}})); await tick(gallery);
+  assert(!document.querySelector('#gallery-lightbox').open && gallery.querySelector('h2').textContent==='写真のテスト' && gallery.querySelector('.news-tag').textContent==='制作工程', 'Changing language closes a stale lightbox and restores Japanese gallery copy');
   const stale=root('news'); let firstResolve, request=0;
   const staleClient={news:()=> ++request === 1 ? new Promise(resolve=>firstResolve=resolve) : Promise.resolve({nodes:[{...article,id:'new',title:'Latest language'}],pageInfo})};
   const first=initContentList(stale,staleClient);
