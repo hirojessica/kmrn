@@ -6,12 +6,8 @@ export const storefrontConfig = Object.freeze({
   country: 'JP',
   // Live sales stay disabled until the store transfer and production setup are ready.
   checkoutEnabled: false,
-  // Shopify Test payment gateway is active. Turn this off before switching gateways.
-  testCheckoutEnabled: true,
-  testProductIds: Object.freeze([
-    'gid://shopify/Product/10387436699930',
-    'gid://shopify/Product/10387437814042',
-    'gid://shopify/Product/10387438338330',
-  ]),
-  showLayoutSamples: true,
+  // Test products were removed when the real catalogue was registered.
+  testCheckoutEnabled: false,
+  testProductIds: Object.freeze([]),
+  showLayoutSamples: false,
 });

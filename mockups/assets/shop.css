@@ -39,6 +39,14 @@
 .shop-detail-copy h1{font-size:clamp(26px,3vw,36px);line-height:1.7;letter-spacing:.03em;margin-block:var(--sp-3) var(--sp-5);overflow-wrap:anywhere}
 .shop-detail-price{font-size:var(--fs-h3);margin-block:var(--sp-5)}
 .shop-description{white-space:pre-line;overflow-wrap:anywhere;line-height:var(--lh-body);color:var(--c-ink-soft);margin-block:var(--sp-6)}
+.shop-description-rich{white-space:normal}
+.shop-description-rich h2,.shop-description-rich h3,.shop-description-rich h4{font-family:var(--font-sans);font-size:var(--fs-md);font-weight:600;line-height:var(--lh-body);margin-block:var(--sp-6) var(--sp-3)}
+.shop-description-rich p,.shop-description-rich ul,.shop-description-rich ol{margin-block:0 var(--sp-4)}
+.shop-description-rich ul,.shop-description-rich ol{padding-left:var(--sp-5)}
+.shop-description-rich ul{list-style:disc}.shop-description-rich ol{list-style:decimal}
+.shop-description-rich li+li{margin-top:var(--sp-1)}
+.shop-description-rich img{max-width:100%;height:auto}
+.shop-description-rich a{text-decoration:underline;color:var(--c-celadon)}
 .shop-variant{display:grid;gap:var(--sp-2);margin-bottom:var(--sp-5);font-size:var(--fs-sm)}
 .shop-purchase{width:100%;border:0}
 .shop-purchase:disabled{background:var(--c-line);color:var(--c-ink-soft);cursor:default}

@@ -1,6 +1,7 @@
-import { storefront, formatMoney, safeImageURL } from './storefront-api.js?v=test-checkout-20260905';
-import { storefrontConfig } from './storefront-config.js?v=test-checkout-20260905';
-import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js?v=test-checkout-20260905';
+import { articleFragment } from './richtext.js';
+import { storefront, formatMoney, safeImageURL } from './storefront-api.js?v=luminous-20260906';
+import { storefrontConfig } from './storefront-config.js?v=luminous-20260906';
+import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js?v=luminous-20260906';
 
 const language = () => document.documentElement.lang === 'en' ? 'en' : 'ja';
 const t = (ja, en) => language() === 'en' ? en : ja;
@@ -129,7 +130,7 @@ export function initCatalog(root, client = storefront) {
       } else {
         grid.dataset.source = storefrontConfig.showLayoutSamples ? 'layout-sample' : 'unavailable';
         grid.replaceChildren(...(storefrontConfig.showLayoutSamples ? samples.map(product => card(product, true)) : []));
-        showStatus(status, 'preview', t('レイアウトサンプル / 商品連携準備中', 'Layout samples / Shop setup in progress'), errorMessage(error), () => load());
+        showStatus(status, storefrontConfig.showLayoutSamples ? 'preview' : 'error', storefrontConfig.showLayoutSamples ? t('レイアウトサンプル / 商品連携準備中', 'Layout samples / Shop setup in progress') : t('商品を読み込めませんでした。', 'Products could not be loaded.'), storefrontConfig.showLayoutSamples ? errorMessage(error) : t('時間をおいて、もう一度お試しください。', 'Please try again shortly.'), () => load());
       }
     } finally {
       if (currentGeneration === generation) grid.setAttribute('aria-busy', 'false');
@@ -174,7 +175,8 @@ export function detailView(product, sample) {
   copy.append(element('p', 'lr-label', sample ? 'LAYOUT SAMPLE' : isTestProduct(product) ? 'TEST PRODUCT' : 'FROM OUR SETO ATELIER'), element('h1', '', title));
   const price = element('p', 'shop-detail-price', sample ? t('価格は商品登録後に表示', 'Price shown after product setup') : priceRange(product));
   copy.append(price);
-  copy.append(element('p', 'shop-description', sample ? t('こちらは商品詳細ページのレイアウトサンプルです。\n\n実際の商品名、写真、説明、価格をShopifyに登録すると、この位置に表示されます。写真は同じ比率の枠に収め、作品全体が見えるように表示します。', 'This is a layout sample for a product detail page.\n\nProduct names, photos, descriptions and prices will be loaded from Shopify. Images fit within a consistent frame so the entire piece remains visible.') : descriptionText(product)));
+  const description = element('div', 'shop-description', sample ? t('こちらは商品詳細ページのレイアウトサンプルです。\n\n実際の商品名、写真、説明、価格をShopifyに登録すると、この位置に表示されます。写真は同じ比率の枠に収め、作品全体が見えるように表示します。', 'This is a layout sample for a product detail page.\n\nProduct names, photos, descriptions and prices will be loaded from Shopify. Images fit within a consistent frame so the entire piece remains visible.') : descriptionText(product));
+  if (!sample && product.descriptionHtml) { description.replaceChildren(articleFragment(product.descriptionHtml)); description.classList.add('shop-description-rich'); }
   const variants = product.variants?.nodes || [];
   let selected = variants.find(variant => variant.availableForSale) || variants[0];
   const purchase = element('button', 'lr-button shop-purchase');
@@ -206,7 +208,7 @@ export function detailView(product, sample) {
     const url = checkoutURL(product, selected, storefrontConfig);
     if (url) location.assign(url);
   });
-  copy.append(purchase, element('p', 'shop-detail-note', !mode ? t('デモページでは購入できません。', 'Purchases are unavailable in this demo.') : mode === 'test' ? t('Shopifyのテスト決済画面へ進みます。実際の請求・発送はありません。', 'Continue to Shopify test checkout. No actual charge or shipment will occur.') : t('お支払いはShopifyの決済画面へ進みます。', 'Payment continues at Shopify checkout.')));
+  copy.append(purchase, element('p', 'shop-detail-note', !mode ? t('オンライン販売の準備中です。', 'Online sales are being prepared.') : mode === 'test' ? t('Shopifyのテスト決済画面へ進みます。実際の請求・発送はありません。', 'Continue to Shopify test checkout. No actual charge or shipment will occur.') : t('お支払いはShopifyの決済画面へ進みます。', 'Payment continues at Shopify checkout.')));
   if (mode === 'test') {
     const instructions = element('details', 'shop-test-guide');
     instructions.append(element('summary', '', t('テスト購入の入力方法', 'How to place a test order')));
@@ -216,6 +218,7 @@ export function detailView(product, sample) {
     instructions.append(list, element('p', '', t('実際のカード番号は入力しないでください。ストアパスワードを求められた場合は、Shopifyのオンラインストア設定で確認できます。', 'Use only the test card details. If a store password is requested, find it in Shopify online store preferences.')));
     copy.append(instructions);
   }
+  copy.append(description);
   layout.append(gallery, copy);
   document.title = `${title}｜KM${language() === 'ja' ? '名古屋ドール株式会社' : ' Nagoya Doll'}`;
   return layout;
