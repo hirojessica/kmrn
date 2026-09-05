@@ -1,6 +1,6 @@
-import { storefront, formatMoney, safeImageURL } from './storefront-api.js';
-import { storefrontConfig } from './storefront-config.js';
-import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js';
+import { storefront, formatMoney, safeImageURL } from './storefront-api.js?v=test-checkout-20260905';
+import { storefrontConfig } from './storefront-config.js?v=test-checkout-20260905';
+import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js?v=test-checkout-20260905';
 
 const language = () => document.documentElement.lang === 'en' ? 'en' : 'ja';
 const t = (ja, en) => language() === 'en' ? en : ja;
