@@ -26,8 +26,8 @@
 
   /* ---- タイポグラフィ ---- */
   --font-serif: "Shippori Mincho", "Yu Mincho", "YuMincho", serif;
-  --font-sans: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-  --font-en: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  --font-en: var(--font-sans);
 
   --fs-hero: clamp(32px, 4.5vw, 52px);
   --fs-h2: clamp(26px, 3vw, 36px);
@@ -68,4 +68,38 @@
   --shadow-card: 0 2px 16px rgba(51, 48, 43, 0.07);
   --transition: 0.25s ease;
   --focus-ring: 2px solid var(--c-gold);
+}
+
+/* Approved image layout. Reference canvas: 941 x 1672. */
+:root {
+ --lr-paper:#faf8f5; --lr-ink:#171714; --lr-placeholder:#efede8;
+ --lr-placeholder-ink:#817b70; --lr-brass:#a18152;
+ --lr-max:1440px; --lr-header-h:94px; --lr-header-pad:22px;
+ --lr-header-right:32px; --lr-logo:218px; --lr-logo-h:59px;
+ --lr-header-gap:clamp(12px,1.4vw,24px);
+ --lr-nav-size:15px; --lr-nav-gap:28px; --lr-header-shop-w:184px; --lr-header-shop-h:44px;
+ --lr-header-shop-size:14px; --lr-header-shop-pad:24px;
+ --lr-hero-ratio:941 / 925; --lr-hero-left:49.4155%; --lr-hero-photo-w:50.5845%;
+ --lr-hero-photo-h:96.7568%; --lr-copy-left:7.014%; --lr-copy-top:32.4324%;
+ --lr-label-type:14px; --lr-label-leading:24px; --lr-label-track:.2em;
+ --lr-hero-type:56px; --lr-hero-leading:1.42; --lr-hero-track:.09em;
+ --lr-hero-title-top:28px; --lr-hero-title-bottom:28.4px;
+ --lr-body-type:15px; --lr-body-leading:1.85;
+ --lr-hero-button-top:50.15px; --lr-button-w:249px; --lr-button-h:58px; --lr-secondary-top:13px;
+ --lr-secondary-type:14px; --lr-touch:44px; --lr-icon:22px;
+ --lr-detail-ratio:941 / 515; --lr-detail-left:50%; --lr-detail-inset:9.8831%;
+ --lr-detail-top:18.2524%; --lr-detail-type:32px;
+ --lr-detail-leading:1.62; --lr-detail-track:.1em; --lr-rule-w:55px; --lr-rule-h:1px;
+ --lr-detail-rule-top:21px; --lr-detail-body-top:34px; --lr-detail-p-gap:32px;
+ --lr-atelier-gap:7.7577%; --lr-atelier-photo-left:43.5707%; --lr-atelier-photo-width:56.4293%;
+ --lr-atelier-copy-left:7.6514%; --lr-atelier-copy-top:25px; --lr-atelier-photo-ratio:4 / 3;
+ --lr-atelier-heading:32px; --lr-atelier-copy-width:31%; --lr-atelier-rule-gap:24px;
+ --lr-products-gap:96px; --lr-grid-gap:24px; --lr-grid-padding:64px;
+ --lr-menu-width:360px; --lr-overlay:rgba(23,23,20,.35); --lr-border:1px;
+ --lr-mobile-header:78px; --lr-mobile-logo:clamp(130px,44vw,174px); --lr-mobile-copy-pad:28px;
+ --lr-mobile-hero:42px; --lr-mobile-detail:clamp(24px,7.125vw,28px); --lr-mobile-copy-top:52px;
+ --lr-mobile-photo-ratio:476 / 650; --lr-focus-offset:4px;
+ --lr-hero-edge-feather:clamp(40px,7vw,104px);
+ --lr-detail-edge-feather:clamp(56px,8.5vw,128px);
+ --lr-photo-bottom-feather:24px; --lr-mobile-edge-feather:28px;
 }

@@ -1,0 +1,24 @@
+/* Keep the measured hero and lace frames stable after adding image assets. */
+.lr-hero-photo > img, .lr-detail-photo > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+
+/* Feather only the photo boundaries into the page; keep the lace itself sharp. */
+.lr-hero-photo {
+ -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--lr-hero-edge-feather)),linear-gradient(to bottom,#000 calc(100% - var(--lr-photo-bottom-feather)),transparent);
+ mask-image:linear-gradient(to right,transparent,#000 var(--lr-hero-edge-feather)),linear-gradient(to bottom,#000 calc(100% - var(--lr-photo-bottom-feather)),transparent);
+ -webkit-mask-composite:source-in;
+ mask-composite:intersect;
+}
+.lr-detail-photo {
+ -webkit-mask-image:linear-gradient(to right,#000 calc(100% - var(--lr-detail-edge-feather)),transparent);
+ mask-image:linear-gradient(to right,#000 calc(100% - var(--lr-detail-edge-feather)),transparent);
+}
+@media(max-width:880px) {
+ .lr-hero-photo > img { object-position:center top; }
+ /* Stacked mobile photos meet the page at the top and bottom. */
+ .lr-hero-photo,.lr-detail-photo {
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 var(--lr-mobile-edge-feather),#000 calc(100% - var(--lr-mobile-edge-feather)),transparent);
+  mask-image:linear-gradient(to bottom,transparent,#000 var(--lr-mobile-edge-feather),#000 calc(100% - var(--lr-mobile-edge-feather)),transparent);
+  -webkit-mask-composite:source-over;
+  mask-composite:add;
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "desktop_ratio": "476:895",
+    "suggested_px": [
+      1428,
+      2685
+    ],
+    "placement": "right, header overlays top; keep face below top10%",
+    "fit": "cover"
+  },
+  "detail": {
+    "ratio": "470:515",
+    "suggested_px": [
+      1410,
+      1545
+    ],
+    "fit": "cover"
+  },
+  "atelier": {
+    "ratio": "4:3",
+    "suggested_px": [
+      1600,
+      1200
+    ],
+    "fit": "cover"
+  },
+  "product": {
+    "ratio": "1:1",
+    "suggested_px": [
+      1200,
+      1200
+    ],
+    "fit": "contain"
+  }
+}

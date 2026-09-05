@@ -1,6 +1,12 @@
 # Design QA — 2026-09-05
 
-## Superseding review: fidelity failed; preview restored
+## Current Pages update — 2026-09-05
+
+The user explicitly requested publishing the later localhost:4180 demo. The deployed source in mockups now copies that demo, including its image assets, feathered edges, adjusted header spacing, Noto Sans JP typography, shared homepage/shop chrome, and product-only Shopify Storefront integration. Source files are compared byte for byte before commit. This is not a claim of identical photography to the original design image or production-ready checkout. See docs/08-approved-demo-pages.md.
+
+The previous Pages baseline 891a63e is preserved as backup/pages-before-demo-20260905-180843 and in a verified ZIP and Git bundle. Historical rejection/restoration findings below refer to the earlier localhost:4178 implementation, not the current request to publish the later demo.
+
+## Historical review: fidelity failed; preview restored
 
 The user rejected the new implementation for failing to reproduce the approved visual, inconsistent image presentation and degraded perceived image quality. The earlier fidelity pass below is withdrawn. Functional smoke checks do not establish visual fidelity.
 

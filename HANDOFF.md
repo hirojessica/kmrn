@@ -1,6 +1,14 @@
 # 最新状況 2026-09-05
 
-**最優先: 公開プレビューを旧版2237613へ復元。** 提案画像と新実装の写真・構図・画像サイズが一致せず、ユーザーから品質不足の指摘を受けました。新テーマを完成・承認済みとして扱わず、今回の新デザインを再公開しないでください。`mockups/` は旧版と同一に戻し、`theme/` は未公開の実装記録として保持しています。詳細は [docs/07-preview-restored.md](docs/07-preview-restored.md)。以下は復元前の履歴です。
+**最新指示: 確認済みローカルデモをGitHub Pagesへ反映。** ユーザーが2026-09-05に明示的に依頼しました。再現素材、境界のぼかし、調整済みのヘッダー余白、Noto Sans JP、同じヘッダー／フッターの商品一覧・詳細、Shopify商品API接続を `mockups/` にコピーしています。反映先は `hirojessica/kmrn` の `main`、公開対象は `mockups/` です。詳細は [docs/08-approved-demo-pages.md](docs/08-approved-demo-pages.md)。
+
+Headlessはインストール済み、ストアフロント369620（Km Nagoya Doll Headless）のStorefront API権限は `unauthenticated_read_product_listings` のみ。公開用トークンは `mockups/assets/storefront-config.js` に設定済みです。非公開・Admin APIトークンを入れないこと。日本語・英語の実APIはHTTP200・商品0件で確認済み。実商品・決済の運用確認はまだです。
+
+今回の反映はローカルデモと同じ内容を公開する作業です。提案画像と完全同一の写真になったことや、Shopifyの販売準備が完了したことは意味しません。本文は仮原稿、工房写真は差し替え待ちです。会社案内・お知らせは旧レイアウトを引き継ぎます。
+
+作業コピー: `C:\Users\Janne\Documents\KMN\work\kmrn-gallery-renewal`。ローカルデモ: 隣接する `kmn-layout-review`。旧公開版はタグ `backup/pages-before-demo-20260905-180843`（891a63e）とZIP・bundleで保存済みです。`theme/`、E:\KMNAGOYAEC、E:\project-folderはこの反映で変更しません。
+
+以下は旧版復元前の履歴です。過去の公開停止・動画・フォント・未着手表記は現在の指示ではありません。
 
 作品写真中心のプレビューとDawnベースのShopifyテーマを実装しました。最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。下記の旧動画仕様・未着手記述は過去時点です。
 

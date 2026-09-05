@@ -1,8 +1,17 @@
-# 公開プレビューを旧版へ復元 2026-09-05
+# 最新デモをGitHub Pagesへ反映 2026-09-05
 
-採用された提案画像との再現度が不足していたため、公開対象の `mockups/` を変更前のコミット `2237613` と同じ内容へ戻しました。新デザインを完成・承認済みとして扱わないでください。復元記録は [docs/07-preview-restored.md](docs/07-preview-restored.md)。
+ユーザーの「Githubページにも反映してほしい」という依頼に基づき、確認中のローカルデモ `work/kmn-layout-review` を公開対象の `mockups/` に反映しました。公開URLは https://hirojessica.github.io/kmrn/ 、デプロイ元は `hirojessica/kmrn` の `main` です。
 
-以下は復元前の実装記録です。
+- ヒーロー・レース接写の生成素材、画像の境界ぼかし、画像枠の比率をそのまま反映。
+- 本文・ナビゲーション・JP/ENはNoto Sans JP、大見出しはShippori Mincho。
+- トップ・商品一覧・商品詳細のヘッダー／フッター／モバイルメニューを共通化。
+- Shopify Headlessの公開用Storefront APIで商品を取得。商品閲覧権限のみ。商品0件は販売準備中、購入操作は無効。
+- 会社案内・お知らせ本文は従来のプレビュー。工房写真・商品情報・本文の正式確認は今後の作業です。
+- 旧公開版は `backup/pages-before-demo-20260905-180843`（891a63e）とローカルZIP・Git bundleで保存。
+
+最新の仕様・復元方法は [docs/08-approved-demo-pages.md](docs/08-approved-demo-pages.md)、作業状況は [HANDOFF.md](HANDOFF.md) を参照してください。共通ヘッダーは `partials/` を編集し、`python scripts/sync-chrome.py` で3ページへ反映します。
+
+以下は初期企画と以前の実装記録です。旧版復元時の公開停止方針は今回の明示的な反映依頼で更新されました。下記の動画・フォント・Shopifyテーマ実装方針より、上記の最新仕様と `mockups/` が優先です。
 
 最新仕様は [docs/06-gallery-preview.md](docs/06-gallery-preview.md)。静的プレビューは `mockups/`、Shopify用テーマは `theme/` です。
 
