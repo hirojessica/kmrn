@@ -1,6 +1,6 @@
 ## 2026-09-06 引き渡し時のGA4導入
 
-Google Analytics 4の導入・計測確認・クライアント管理権限の確認を、引き渡しの必須項目に追加しました。現在は未設置です。測定ID等を確定後、静的サイトとShopify購入経路の両方を設定します。対象と完了条件は [docs/analytics-handoff.md](docs/analytics-handoff.md) を参照してください。
+Google Analytics 4の導入・計測確認・クライアント管理権限の確認は引き渡しの必須項目です。測定ID `G-2VPT10TFBK` の基本タグを現行原稿3ページとリニューアル版9ページへ設置済み。本番ドメインのHTTPSでだけ動作し、GitHub Pagesとlocalhostは計測しません。現行サーバーへのアップロード、GA4受信、Shopify購入等のイベント確認は未完了です。対象と完了条件は [docs/analytics-handoff.md](docs/analytics-handoff.md) を参照してください。
 
 ## 2026-09-06 実商品「ルミナス ドーナッツパンダ ティポット」
 
