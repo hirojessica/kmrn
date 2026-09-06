@@ -68,3 +68,20 @@
 @media(max-width:480px){.content-home-links{grid-template-columns:1fr;gap:0}.content-home-heading{flex-direction:column}.gallery-dialog{padding-inline:18px}.gallery-card h2{font-size:16px}.content-main{padding-inline:20px}}
 @media(prefers-reduced-motion:reduce){.gallery-frame img{transition:none}}
 .contact-title span{display:inline-block}
+
+/* Gallery filters and ten-photo pagination use the shared design tokens. */
+.gallery-toolbar{display:grid;gap:var(--sp-3);margin-bottom:var(--sp-6);padding-block:var(--sp-5);border-block:var(--lr-border) solid var(--c-line);scroll-margin-top:var(--sp-5)}
+.gallery-toolbar[hidden],.gallery-pagination[hidden]{display:none}
+.gallery-filter-label{font-size:var(--fs-sm);color:var(--c-ink-soft)}
+.gallery-filters{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
+.gallery-filter,.gallery-page{font:inherit;font-size:var(--fs-sm);min-height:var(--lr-touch);min-width:var(--lr-touch);padding:var(--sp-2) var(--sp-4);border:var(--lr-border) solid var(--c-line);background:transparent;color:var(--c-ink);border-radius:var(--radius-sm);transition:background var(--transition),color var(--transition);overflow-wrap:anywhere}
+.gallery-filter{max-width:100%;text-align:left}
+.gallery-filter[aria-pressed=true],.gallery-page[aria-current=page]{border-color:var(--c-ink);background:var(--c-ink);color:var(--c-white)}
+.gallery-filter:hover,.gallery-page:not(:disabled):hover{border-color:var(--lr-brass)}
+.gallery-filter:focus-visible,.gallery-page:focus-visible,.gallery-summary:focus-visible{outline:var(--focus-ring);outline-offset:var(--lr-focus-offset)}
+.gallery-summary{font-size:var(--fs-sm);color:var(--c-ink-soft)}
+.gallery-pagination{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:var(--sp-2);margin-top:var(--sp-7)}
+.gallery-page{padding-inline:var(--sp-3)}
+.gallery-page:disabled:not([aria-current=page]){color:var(--c-ink-soft);border-color:transparent;cursor:default}
+.gallery-page-gap{color:var(--c-ink-soft);padding-inline:var(--sp-1)}
+@media(prefers-reduced-motion:reduce){.gallery-filter,.gallery-page{transition:none}}

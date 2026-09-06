@@ -2,6 +2,7 @@ import { articleFragment } from './richtext.js';
 export { articleFragment } from './richtext.js';
 import { storefront, safeImageURL } from './storefront-api.js?v=content-20260905';
 import { localizedGalleryItem } from './gallery-data.js';
+import { loadGalleryEntries, galleryPage, galleryPageNumbers } from './gallery-pagination.js?v=gallery-pages-20260906';
 
 const language = () => document.documentElement.lang === 'en' ? 'en' : 'ja';
 const tr = (ja, en) => language() === 'en' ? en : ja;
@@ -65,32 +66,112 @@ function galleryCard(raw) {
   card.append(button, caption); return card;
 }
 
+export function initGalleryList(root, client = storefront) {
+  const list = root.querySelector('[data-content-list]');
+  list.id ||= 'gallery-list';
+  root.querySelector('[data-content-more]')?.remove();
+  const toolbar = el('div', null, 'gallery-toolbar'), filters = el('div', null, 'gallery-filters');
+  const label = el('p', null, 'gallery-filter-label'), summary = el('p', null, 'gallery-summary');
+  label.id = 'gallery-category-label'; filters.setAttribute('role', 'group'); filters.setAttribute('aria-labelledby', label.id);
+  summary.setAttribute('role', 'status'); summary.setAttribute('aria-live', 'polite'); summary.tabIndex = -1;
+  toolbar.append(label, filters, summary); list.before(toolbar);
+  const pagination = el('nav', null, 'gallery-pagination'); list.after(pagination);
+  let entries = [], loaded = false, controller, generation = 0, view;
+  const urlState = () => { const params = new URLSearchParams(location.search); return { category: params.get('category'), page: params.get('page') || 1 }; };
+  function writeState(category, page, replace = false) {
+    const url = new URL(location.href);
+    if (category) url.searchParams.set('category', category); else url.searchParams.delete('category');
+    if (page > 1) url.searchParams.set('page', page); else url.searchParams.delete('page');
+    if (url.href !== location.href) history[replace ? 'replaceState' : 'pushState'](history.state, '', url);
+  }
+  function move(page) {
+    writeState(view.category, page); render(); summary.focus({ preventScroll: true });
+    toolbar.scrollIntoView({ block: 'start' });
+  }
+  function render() {
+    if (!loaded) return;
+    document.querySelector('#gallery-lightbox[open]')?.close();
+    root.setAttribute('aria-label', tr('フォトギャラリー', 'Photo Gallery'));
+    view = galleryPage(entries, { ...urlState(), language: language() });
+    writeState(view.category, view.page, true);
+    toolbar.hidden = !entries.length; pagination.hidden = view.pages < 2;
+    label.textContent = tr('カテゴリ', 'Category'); filters.replaceChildren();
+    for (const category of [{ key: null, label: tr('すべて', 'All'), count: entries.length }, ...view.categories]) {
+      const button = el('button', `${category.label} (${category.count})`, 'gallery-filter');
+      button.type = 'button'; button.dataset.category = category.key || '';
+      button.setAttribute('aria-pressed', String(view.category === category.key)); button.setAttribute('aria-controls', list.id);
+      button.addEventListener('click', () => {
+        if (view.category === category.key) return;
+        writeState(category.key, 1); render();
+        [...filters.children].find(node => node.dataset.category === (category.key || ''))?.focus({ preventScroll: true });
+      });
+      filters.append(button);
+    }
+    summary.textContent = tr(`全${view.total}件中 ${view.start}–${view.end}件`, `${view.start}–${view.end} of ${view.total} photos`);
+    list.replaceChildren(...view.entries.map(galleryCard).filter(Boolean)); list.dataset.source = 'shopify';
+    pagination.setAttribute('aria-label', tr('ギャラリーのページ送り', 'Gallery pagination')); pagination.replaceChildren();
+    const pageButton = (text, page, disabled, accessibleName) => {
+      const button = el('button', text, 'gallery-page'); button.type = 'button'; button.disabled = disabled;
+      button.setAttribute('aria-label', accessibleName); button.setAttribute('aria-controls', list.id);
+      button.addEventListener('click', () => move(page)); return button;
+    };
+    pagination.append(pageButton(tr('前へ', 'Previous'), view.page - 1, view.page === 1, tr('前のページ', 'Previous page')));
+    for (const page of galleryPageNumbers(view.page, view.pages)) {
+      if (page === null) { const gap = el('span', '…', 'gallery-page-gap'); gap.setAttribute('aria-hidden', 'true'); pagination.append(gap); continue; }
+      const button = pageButton(String(page), page, page === view.page, tr(`${page}ページ目`, `Page ${page}`));
+      if (page === view.page) button.setAttribute('aria-current', 'page');
+      pagination.append(button);
+    }
+    pagination.append(pageButton(tr('次へ', 'Next'), view.page + 1, view.page === view.pages, tr('次のページ', 'Next page')));
+    status(root, entries.length ? 'ready' : 'empty', entries.length ? '' : tr('写真はただいま準備中です。公開まで、もうしばらくお待ちください。', 'Our photo gallery is being prepared. Please check back soon.'));
+  }
+  async function load() {
+    controller?.abort(); controller = new AbortController(); const current = ++generation;
+    loaded = false; toolbar.hidden = true; pagination.hidden = true; list.replaceChildren(); list.setAttribute('aria-busy', 'true');
+    root.setAttribute('aria-label', tr('フォトギャラリー', 'Photo Gallery'));
+    status(root, 'loading', tr('読み込んでいます…', 'Loading…'));
+    try {
+      const result = await loadGalleryEntries(client, controller.signal);
+      if (current !== generation) return;
+      entries = result;
+      loaded = true; render();
+    } catch (error) {
+      if (current !== generation || error.name === 'AbortError') return;
+      status(root, 'error', tr('読み込みができませんでした。時間をおいて、もう一度お試しください。', 'We could not load the content. Please try again.'), load);
+    } finally { if (current === generation) list.setAttribute('aria-busy', 'false'); }
+  }
+  document.addEventListener('kmn:languagechange', () => {
+    if (loaded) render(); else load();
+  });
+  window.addEventListener('popstate', () => { render(); if (loaded) toolbar.scrollIntoView({ block: 'start' }); });
+  return load();
+}
+
 export function initContentList(root, client = storefront) {
-  const kind = root.dataset.content, gallery = kind === 'gallery', featured = kind === 'news-featured';
+  if (root.dataset.content === 'gallery') return initGalleryList(root, client);
+  const featured = root.dataset.content === 'news-featured';
   const list = root.querySelector('[data-content-list]'), more = root.querySelector('[data-content-more]');
   let controller, generation = 0, cursor = null, entries = [], seen = new Set();
   async function load(append = false) {
     controller?.abort(); controller = new AbortController(); const current = ++generation;
-    if (gallery) root.setAttribute('aria-label', tr('フォトギャラリー', 'Photo Gallery'));
     if (!append) {
-      if (gallery) document.querySelector('#gallery-lightbox[open]')?.close();
       entries = []; cursor = null; seen = new Set(); list.replaceChildren();
     }
     list.setAttribute('aria-busy', 'true'); if (more) more.disabled = true;
     status(root, 'loading', tr('読み込んでいます…', 'Loading…'));
     try {
-      const result = await client[gallery ? 'gallery' : 'news']({ first: featured ? 3 : gallery ? 24 : 12, after: append ? cursor : null, language: language().toUpperCase(), signal: controller.signal });
+      const result = await client.news({ first: featured ? 3 : 12, after: append ? cursor : null, language: language().toUpperCase(), signal: controller.signal });
       if (current !== generation) return;
       for (const item of result.nodes) {
         if (seen.has(item.id)) continue;
         seen.add(item.id);
-        const card = gallery ? galleryCard(item) : newsRow(item);
+        const card = newsRow(item);
         if (card) { list.append(card); entries.push(item); }
       }
       cursor = result.pageInfo.endCursor;
       if (more) more.hidden = !(result.pageInfo.hasNextPage && cursor);
       list.dataset.source = 'shopify';
-      status(root, entries.length ? 'ready' : 'empty', entries.length ? '' : gallery ? tr('写真はただいま準備中です。公開まで、もうしばらくお待ちください。', 'Our photo gallery is being prepared. Please check back soon.') : tr('現在、公開されているお知らせはありません。', 'There are no published announcements at the moment.'));
+      status(root, entries.length ? 'ready' : 'empty', entries.length ? '' : tr('現在、公開されているお知らせはありません。', 'There are no published announcements at the moment.'));
     } catch (error) {
       if (current !== generation || error.name === 'AbortError') return;
       if (more) more.hidden = true;
