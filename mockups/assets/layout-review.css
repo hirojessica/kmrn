@@ -14,3 +14,11 @@ html:lang(en) .lr-hero h1{font-family:var(--font-serif);font-size:var(--fs-hero)
 
 @media(min-width:881px){.lr-detail-copy p{white-space:pre-line}}
 @media(min-width:881px){.lr-hero-lead{font-size:16px;letter-spacing:.035em}}
+
+/* Shared Instagram links keep the existing icon style and touch target. */
+.lr-instagram{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);min-width:var(--lr-touch);min-height:var(--lr-touch);flex-shrink:0;color:var(--lr-ink);transition:color var(--transition)}
+.lr-instagram svg{width:var(--lr-icon);height:var(--lr-icon);flex:none}
+.lr-instagram:hover{color:var(--c-gold-dark)}
+.lr-instagram--footer{margin-top:var(--sp-3);justify-content:flex-start}
+.lr-menu nav .lr-instagram--menu{align-self:flex-start;padding:var(--sp-2) 0}
+@media(max-width:1099px){.lr-instagram--header{display:none}}

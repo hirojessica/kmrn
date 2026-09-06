@@ -3,6 +3,7 @@
  const setLanguage = lang => {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-ja][data-en]').forEach(el => el.textContent = el.dataset[lang]);
+  document.querySelectorAll('[data-aria-ja][data-aria-en]').forEach(el => el.setAttribute('aria-label', lang === 'en' ? el.dataset.ariaEn : el.dataset.ariaJa));
   languageButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.language === lang)));
   const titles = document.querySelector('title').dataset;
   document.title = lang === 'ja' ? (titles.titleJa || '陶に咲く、レース。｜KM名古屋ドール株式会社') : (titles.titleEn || 'Lace blooms in porcelain | KM Nagoya Doll');
