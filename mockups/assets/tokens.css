@@ -26,6 +26,8 @@
   --cta-photo-opacity: .28;
   --cta-photo-saturation: .45;
   --cta-photo-position: center 54%;
+  --gallery-filters-max: 720px;
+  --gallery-filter-min-height: 56px;
 
   /* ---- タイポグラフィ ---- */
   --font-serif: "Shippori Mincho", "Yu Mincho", "YuMincho", serif;
