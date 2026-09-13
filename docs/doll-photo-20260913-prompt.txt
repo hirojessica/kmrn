@@ -1,0 +1,13 @@
+Mode: built-in ImageGen, edit using referenced_image_paths.
+Input: C:/Users/Janne/Downloads/P1064799.jpg
+Output: mockups/assets/porcelain-pink-hero-20260913.png
+
+Use case: compositing.
+Asset type: portrait hero photograph for a refined Japanese porcelain-lace workshop website, approximately 2:3 portrait format.
+Input image 1 is the EDIT TARGET, an actual pink-and-white porcelain lace doll. Use this specific photographed object, not a similar doll.
+Primary request: replace only the plain studio backdrop with a softly out-of-focus warm ivory interior background with very subtle curtain-like vertical light and soft daylight. Elegant, quiet, warm cream matching #faf8f5. No furniture or decorative props.
+Composition: an editorial cropped portrait of the photographed doll, showing the COMPLETE head and flower ornament, face, upper torso, hands and as much of the pink and white lace ruffles as fits. Crop the existing dress at the bottom of the frame; this is deliberately a partial-body photograph. Leave roughly the top 15 percent as light breathing room above the flowers. Keep the subject in the central/right area. It will sit on the right half of a website, with website text OUTSIDE this image to the left.
+STRICT invariants: preserve the doll's actual face, gaze, downward head angle, pose, hands, pink hair and flower ornament, pale pink chair, pink-red and ivory colors, exact white bows, dense fine porcelain lace patterns and material. Preserve the original product photography as closely as possible; do not reinterpret as fabric or invent another lace pattern. Preserve natural slightly glossy porcelain and matte lace surfaces. Do not add a crown. Do not beautify or humanize the face.
+Do not generate the unseen lower skirt, hem, legs, feet, plinth, floor or full body. Do not change the posture. No text, labels, logos or watermarks. Sharp product detail, background softly defocused.
+
+Lace detail: no generative prompt. The supplied original is displayed through a CSS crop; the source file is unchanged.

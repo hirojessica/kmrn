@@ -1,6 +1,12 @@
 /* Keep the measured hero and lace frames stable after adding image assets. */
 .lr-hero-photo > img, .lr-detail-photo > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 
+/* Crop the supplied photograph in the frame; do not redraw its ceramic lace. */
+.lr-detail-photo--original > img {
+ inset:var(--lr-detail-original-top) auto auto var(--lr-detail-original-left);
+ width:var(--lr-detail-original-width); max-width:none; height:auto; object-fit:initial;
+}
+
 /* Feather only the photo boundaries into the page; keep the lace itself sharp. */
 .lr-hero-photo {
  -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--lr-hero-edge-feather)),linear-gradient(to bottom,#000 calc(100% - var(--lr-photo-bottom-feather)),transparent);

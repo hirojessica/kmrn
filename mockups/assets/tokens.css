@@ -85,6 +85,8 @@
  --lr-nav-size:15px; --lr-nav-gap:28px; --lr-header-shop-w:184px; --lr-header-shop-h:44px;
  --lr-header-shop-size:14px; --lr-header-shop-pad:24px;
  --lr-hero-ratio:941 / 925; --lr-hero-left:49.4155%; --lr-hero-photo-w:50.5845%;
+ /* Original P1064799: crop x=180,y=830,w=1060,h=1161.5 in its 2615x2000 pixels. */
+ --lr-detail-original-width:246.6981%; --lr-detail-original-left:-16.9811%; --lr-detail-original-top:-71.4603%;
  --lr-hero-photo-h:96.7568%; --lr-copy-left:7.014%; --lr-copy-top:32.4324%;
  --lr-label-type:14px; --lr-label-leading:24px; --lr-label-track:.2em;
  --lr-hero-type:56px; --lr-hero-leading:1.42; --lr-hero-track:.09em;
