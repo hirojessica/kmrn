@@ -1,4 +1,5 @@
 // FormSubmit handles email delivery and CAPTCHA on its hosted submission screen.
+import { siteURL } from './site-url.js';
 // The recipient confirmed completion of the activation email on 2026-09-05.
 export const contactConfig = Object.freeze({ activated: true, recipient: 'info@km-nagoya-doll.com' });
 const form = document.querySelector('[data-contact-form]');
@@ -10,7 +11,7 @@ if (form) {
   form.addEventListener('submit', event => {
     if (!contactConfig.activated) { event.preventDefault(); return; }
     if (!form.checkValidity()) return;
-    const next = new URL('contact-thanks.html', location.href);
+    const next = siteURL('contact-thanks/');
     form.querySelector('[name=_next]').value = next.href;
     button.disabled = true;
   });

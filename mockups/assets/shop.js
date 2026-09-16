@@ -1,4 +1,5 @@
 import { articleFragment } from './richtext.js';
+import { siteURL } from './site-url.js';
 import { storefront, formatMoney, safeImageURL } from './storefront-api.js?v=luminous-20260906';
 import { storefrontConfig } from './storefront-config.js?v=luminous-20260906';
 import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js?v=luminous-20260906';
@@ -55,7 +56,7 @@ export function descriptionText(product) {
 function card(product, sample = false) {
   const link = element('a', 'shop-card');
   const title = sample ? product[language()] : product.title;
-  link.href = sample ? `product.html?preview=${encodeURIComponent(product.handle)}` : `product.html?handle=${encodeURIComponent(product.handle)}`;
+  link.href = siteURL(`product/?${sample ? 'preview' : 'handle'}=${encodeURIComponent(product.handle)}`).href;
   const photo = element('div', 'shop-card-image');
   productImage(product.featuredImage, photo, title, sample);
   link.append(photo, element('h3', '', title));

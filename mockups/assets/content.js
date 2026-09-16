@@ -1,4 +1,5 @@
 import { articleFragment } from './richtext.js';
+import { siteURL } from './site-url.js';
 export { articleFragment } from './richtext.js';
 import { storefront, safeImageURL } from './storefront-api.js?v=content-20260905';
 import { localizedGalleryItem } from './gallery-data.js';
@@ -34,7 +35,7 @@ function dateNode(value) {
 }
 function newsRow(article) {
   const li = el('li'), a = el('a', null, 'news-row');
-  a.href = `news-article.html?handle=${encodeURIComponent(article.handle)}`;
+  a.href = siteURL(`news-article/?handle=${encodeURIComponent(article.handle)}`).href;
   a.append(dateNode(article.publishedAt), el('span', article.tags?.[0] || tr('お知らせ', 'News'), 'news-tag'), el('span', article.title, 'news-title'));
   const arrow = el('span', '→', 'news-arrow'); arrow.setAttribute('aria-hidden', 'true'); a.append(arrow); li.append(a); return li;
 }

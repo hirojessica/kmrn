@@ -16,7 +16,7 @@ function browser(url, existing = {}) {
 
 test('both HTTPS production hosts initialize the supplied GA4 tag once', () => {
   for (const host of ['km-nagoya-doll.com', 'www.km-nagoya-doll.com']) {
-    const page = browser(`https://${host}/product.html?handle=luminous-doughnut-panda-teapot`);
+    const page = browser(`https://${host}/product/?handle=luminous-doughnut-panda-teapot`);
     page.run();
     page.run();
     assert.equal(page.scripts.length, 1);
@@ -62,9 +62,10 @@ test('initialization preserves an existing data layer and tag function', () => {
 test('every public renewal page loads the shared tag exactly once in its head', () => {
   const names = ['index', 'about', 'collection', 'product', 'news', 'news-article', 'gallery', 'contact', 'contact-thanks'];
   for (const name of names) {
-    const html = readFileSync(new URL(`../mockups/${name}.html`, import.meta.url), 'utf8');
-    assert.equal((html.match(/src="assets\/analytics\.js\?v=ga4-20260906"/g) || []).length, 1, name);
-    assert.match(html.split('</head>')[0], /<script src="assets\/analytics\.js\?v=ga4-20260906" defer><\/script>/, name);
+    const path = name === 'index' ? 'index.html' : `${name}/index.html`;
+    const html = readFileSync(new URL(`../mockups/${path}`, import.meta.url), 'utf8');
+    assert.equal((html.match(/src="(?:\.\.\/)?assets\/analytics\.js\?v=ga4-20260906"/g) || []).length, 1, name);
+    assert.match(html.split('</head>')[0], /<script src="(?:\.\.\/)?assets\/analytics\.js\?v=ga4-20260906" defer><\/script>/, name);
     assert.equal((html.match(/googletagmanager\.com\/gtag\/js/g) || []).length, 0, name);
   }
 });
