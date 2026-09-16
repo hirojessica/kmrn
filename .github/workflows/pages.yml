@@ -1,10 +1,12 @@
-name: Deploy static mockups to GitHub Pages
+name: Build Shopify content and deploy preview
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
 
 permissions:
   contents: read
@@ -28,18 +30,32 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - name: Install build dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Check page URLs and storefront behavior
         run: node --test tests/*.test.mjs
 
+      - name: Build Japanese and English pages from published Shopify content
+        run: pnpm build
+
+      - name: Verify generated HTML, language links and image files
+        run: pnpm check:site
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload mockups
+      - name: Upload generated preview
         uses: actions/upload-pages-artifact@v3
         with:
-          path: mockups
+          path: site-build
 
       - name: Deploy to GitHub Pages
         id: deployment

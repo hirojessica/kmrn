@@ -10,10 +10,19 @@
   try { localStorage.setItem('kmn-language',lang); } catch {}
   document.dispatchEvent(new CustomEvent('kmn:languagechange', { detail: { language: lang } }));
  };
- let initial = 'ja';
- try { const saved=localStorage.getItem('kmn-language'); if (saved==='ja'||saved==='en') initial=saved; } catch {}
- setLanguage(initial);
- languageButtons.forEach(b => b.addEventListener('click',()=>setLanguage(b.dataset.language)));
+ if (document.documentElement.dataset.staticSite === 'true') {
+  // The URL is the language authority. Do not override a linked page with localStorage.
+  languageButtons.forEach(link => link.addEventListener('click', () => {
+   const target = new URL(link.href);
+   target.search = location.search; target.hash = location.hash;
+   link.href = target.href;
+  }));
+ } else {
+  let initial = 'ja';
+  try { const saved=localStorage.getItem('kmn-language'); if (saved==='ja'||saved==='en') initial=saved; } catch {}
+  setLanguage(initial);
+  languageButtons.forEach(b => b.addEventListener('click',()=>setLanguage(b.dataset.language)));
+ }
  const dialog=document.querySelector('.lr-menu'), open=document.querySelector('.lr-menu-open'), close=document.querySelector('.lr-menu-close');
  if (!dialog || !open || !close) return;
  open.addEventListener('click',()=>{dialog.showModal();open.setAttribute('aria-expanded','true');});

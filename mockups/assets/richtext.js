@@ -1,4 +1,6 @@
 import { safeImageURL } from './storefront-api.js';
+import { responsiveImage } from './responsive-image.js';
+import { localizedLinkURL } from './site-url.js';
 
 // Rebuild the CMS rich text from an allowlist; never insert untrusted HTML directly.
 export function articleFragment(html, doc = document) {
@@ -14,11 +16,12 @@ export function articleFragment(html, doc = document) {
       if (child.tagName === 'IMG') {
         const src = safeImageURL(child.getAttribute('src')); if (!src) continue;
         node.src = src; node.alt = child.getAttribute('alt') || ''; node.loading = 'lazy'; node.decoding = 'async';
+        responsiveImage(node, { url: src, width: child.getAttribute('width'), height: child.getAttribute('height') });
       }
       if (child.tagName === 'A') {
         try {
           const url = new URL(child.getAttribute('href') || '', location.href);
-          if (['https:', 'mailto:', 'tel:'].includes(url.protocol) || (url.protocol === 'http:' && url.origin === location.origin)) { node.href = url.href; node.rel = 'noopener noreferrer'; }
+          if (['https:', 'mailto:', 'tel:'].includes(url.protocol) || (url.protocol === 'http:' && url.origin === location.origin)) { node.href = localizedLinkURL(url).href; node.rel = 'noopener noreferrer'; }
         } catch {}
       }
       if (['TD','TH'].includes(child.tagName)) for (const attr of ['colspan','rowspan']) {

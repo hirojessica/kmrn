@@ -105,9 +105,9 @@ export function createStorefrontClient(config = storefrontConfig, fetchImpl = (.
     async product(handle, { language = 'JA', signal } = {}) {
       if (!handle || handle.length > 255) throw new StorefrontError('NOT_FOUND', 'Missing product handle');
       const data = await request(`query Product($handle: String!, $country: CountryCode!, $language: LanguageCode!) @inContext(country: $country, language: $language) {
-        product(handle: $handle) { ${cardFields} description descriptionHtml
+        product(handle: $handle) { ${cardFields} description descriptionHtml seo { title description } vendor updatedAt
           images(first: 12) { nodes { url altText width height } }
-          variants(first: 100) { nodes { id title availableForSale price { amount currencyCode } image { url altText width height } } pageInfo { hasNextPage } }
+          variants(first: 100) { nodes { id title sku selectedOptions { name value } availableForSale price { amount currencyCode } image { url altText width height } } pageInfo { hasNextPage } }
         }
       }`, { handle, country: config.country, language }, signal);
       if (!data.product) throw new StorefrontError('NOT_FOUND', 'Product not found');

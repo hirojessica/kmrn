@@ -1,5 +1,6 @@
 import { storefront, safeImageURL } from './storefront-api.js?v=gallery-20260905';
 import { localizedGalleryItem } from './gallery-data.js';
+import { responsiveImage, imageURL } from './responsive-image.js';
 
 // Stable handles keep process photos connected even after the gallery grows.
 const slots = [...document.querySelectorAll('[data-gallery-handle]')];
@@ -16,7 +17,7 @@ async function loadPhotos() {
       const img = slot.querySelector('img');
       const entry = entries.get(slot.dataset.galleryHandle);
       const photo = entry?.image;
-      const url = safeImageURL(photo?.url);
+      const url = imageURL(photo?.url, Math.min(photo?.width || 1440, 1440));
       if (!url) {
         img.hidden = true;
         img.removeAttribute('src');
@@ -25,11 +26,7 @@ async function loadPhotos() {
       }
       try {
         if (img.src !== url) {
-          const loaded = new Image();
-          loaded.src = url;
-          await loaded.decode();
-          if (current !== generation) return;
-          img.src = url;
+          responsiveImage(img, photo);
         }
         img.alt = slot.getAttribute('aria-hidden') === 'true' ? '' : photo.altText || entry.title;
         img.width = photo.width;

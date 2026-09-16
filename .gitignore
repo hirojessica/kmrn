@@ -4,3 +4,5 @@ qa/
 .claude/settings.local.json
 Thumbs.db
 .DS_Store
+node_modules/
+site-build/

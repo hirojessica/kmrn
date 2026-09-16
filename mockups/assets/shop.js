@@ -1,5 +1,6 @@
 import { articleFragment } from './richtext.js';
-import { siteURL } from './site-url.js';
+import { siteURL, contentURL } from './site-url.js';
+import { responsiveImage } from './responsive-image.js';
 import { storefront, formatMoney, safeImageURL } from './storefront-api.js?v=luminous-20260906';
 import { storefrontConfig } from './storefront-config.js?v=luminous-20260906';
 import { isTestProduct, checkoutMode, checkoutURL } from './checkout.js?v=luminous-20260906';
@@ -22,7 +23,7 @@ function placeholder(container, sample = false) {
   label.append(element('small', '', sample ? 'LAYOUT SAMPLE / 1 : 1' : t('準備中', 'Coming soon')));
   container.replaceChildren(label);
 }
-function productImage(image, container, title, sample = false) {
+function productImage(image, container, title, sample = false, eager = false) {
   const src = safeImageURL(image?.url);
   if (!src) return placeholder(container, sample);
   const img = element('img');
@@ -32,6 +33,8 @@ function productImage(image, container, title, sample = false) {
   img.height = image.height || 1200;
   img.loading = 'lazy';
   img.decoding = 'async';
+  const thumbnail = container.tagName === 'BUTTON';
+  responsiveImage(img, image, { maxWidth: thumbnail ? 240 : 1440, sizes: thumbnail ? '80px' : container.classList.contains('shop-card-image') ? '(max-width: 600px) 50vw, 33vw' : '(max-width: 880px) 100vw, 50vw', eager });
   img.addEventListener('error', () => placeholder(container), { once: true });
   container.replaceChildren(img);
 }
@@ -53,10 +56,10 @@ export function descriptionText(product) {
   }
   return text(doc.body).replace(/\n{3,}/g, '\n\n').trim();
 }
-function card(product, sample = false) {
+export function card(product, sample = false) {
   const link = element('a', 'shop-card');
   const title = sample ? product[language()] : product.title;
-  link.href = siteURL(`product/?${sample ? 'preview' : 'handle'}=${encodeURIComponent(product.handle)}`).href;
+  link.href = sample ? siteURL(`product/?preview=${encodeURIComponent(product.handle)}`).href : contentURL('product', product.handle).href;
   const photo = element('div', 'shop-card-image');
   productImage(product.featuredImage, photo, title, sample);
   link.append(photo, element('h3', '', title));
@@ -103,11 +106,11 @@ export function initCatalog(root, client = storefront) {
     controller = new AbortController();
     const currentGeneration = ++generation;
     const requestLanguage = language();
-    if (!append) { products = []; grid.replaceChildren(); pageInfo = null; }
+    if (!append) { products = []; pageInfo = null; }
     grid.setAttribute('aria-busy', 'true');
     if (more) { more.disabled = true; more.hidden = true; }
     if (sort) sort.disabled = true;
-    showStatus(status, 'loading', '', t('作品を読み込んでいます…', 'Loading pieces…'));
+    if (!grid.children.length) showStatus(status, 'loading', '', t('作品を読み込んでいます…', 'Loading pieces…'));
     try {
       const result = await client.products({ first: featured ? 3 : 12, after: append ? pageInfo?.endCursor : null, sort: sort?.value || 'newest', language: requestLanguage.toUpperCase(), signal: controller.signal });
       if (currentGeneration !== generation) return;
@@ -127,6 +130,9 @@ export function initCatalog(root, client = storefront) {
       if (currentGeneration !== generation || error.name === 'AbortError') return;
       if (append && products.length) {
         showStatus(status, 'error', t('続きの商品を読み込めませんでした。', 'More pieces could not be loaded.'), '', () => load(true));
+        if (sort) sort.disabled = false;
+      } else if (grid.children.length && grid.dataset.source === 'prerender') {
+        showStatus(status, 'offline', '', t('最新の価格・在庫を確認できませんでした。商品ページで再確認してください。', 'Current prices and availability could not be checked. Please try the product page.'), () => load());
         if (sort) sort.disabled = false;
       } else {
         grid.dataset.source = storefrontConfig.showLayoutSamples ? 'layout-sample' : 'unavailable';
@@ -151,7 +157,7 @@ export function detailView(product, sample) {
   const layout = element('div', 'shop-detail');
   const gallery = element('div', 'shop-gallery');
   const photo = element('div', 'shop-detail-photo');
-  productImage(product.featuredImage, photo, title, sample);
+  productImage(product.featuredImage, photo, title, sample, true);
   gallery.append(photo);
   const images = product.images?.nodes || [];
   const thumbButtons = [];
@@ -164,7 +170,7 @@ export function detailView(product, sample) {
       button.setAttribute('aria-pressed', String(index === 0));
       productImage(image, button, '', false);
       button.addEventListener('click', () => {
-        productImage(image, photo, title);
+        productImage(image, photo, title, false, true);
         thumbButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
       });
       thumbButtons.push(button);
@@ -179,7 +185,9 @@ export function detailView(product, sample) {
   const description = element('div', 'shop-description', sample ? t('こちらは商品詳細ページのレイアウトサンプルです。\n\n実際の商品名、写真、説明、価格をShopifyに登録すると、この位置に表示されます。写真は同じ比率の枠に収め、作品全体が見えるように表示します。', 'This is a layout sample for a product detail page.\n\nProduct names, photos, descriptions and prices will be loaded from Shopify. Images fit within a consistent frame so the entire piece remains visible.') : descriptionText(product));
   if (!sample && product.descriptionHtml) { description.replaceChildren(articleFragment(product.descriptionHtml)); description.classList.add('shop-description-rich'); }
   const variants = product.variants?.nodes || [];
-  let selected = variants.find(variant => variant.availableForSale) || variants[0];
+  const requestedVariant = new URLSearchParams(location.search).get('variant');
+  let selected = variants.find(variant => variant.id?.split('/').pop() === requestedVariant) || variants.find(variant => variant.availableForSale) || variants[0];
+  if (requestedVariant && selected?.image) productImage(selected.image, photo, title, false, true);
   const purchase = element('button', 'lr-button shop-purchase');
   purchase.type = 'button';
   const updateVariant = () => {
@@ -198,7 +206,7 @@ export function detailView(product, sample) {
     });
     select.addEventListener('change', () => {
       selected = variants.find(variant => variant.id === select.value);
-      if (selected?.image) { productImage(selected.image, photo, title); thumbButtons.forEach(button => button.setAttribute('aria-pressed', 'false')); }
+      if (selected?.image) { productImage(selected.image, photo, title, false, true); thumbButtons.forEach(button => button.setAttribute('aria-pressed', 'false')); }
       updateVariant();
     });
     label.append(select); copy.append(label);
@@ -221,15 +229,15 @@ export function detailView(product, sample) {
   }
   copy.append(description);
   layout.append(gallery, copy);
-  document.title = `${title}｜KM${language() === 'ja' ? '名古屋ドール株式会社' : ' Nagoya Doll'}`;
+  document.title = product.seo?.title || `${title}｜KM${language() === 'ja' ? '名古屋ドール株式会社' : ' Nagoya Doll'}`;
   return layout;
 }
 
-function initDetail(root) {
+export function initDetail(root, client = storefront) {
   const detail = root.querySelector('[data-product-detail]');
   const status = root.querySelector('[data-shop-status]');
   const params = new URLSearchParams(location.search);
-  const handle = params.get('handle');
+  const handle = root.dataset.handle || params.get('handle');
   const sample = storefrontConfig.showLayoutSamples && !handle ? samples.find(item => item.handle === params.get('preview')) : null;
   let generation = 0;
   let controller;
@@ -237,29 +245,29 @@ function initDetail(root) {
     controller?.abort(); controller = new AbortController();
     const currentGeneration = ++generation;
     detail.setAttribute('aria-busy', 'true');
-    detail.replaceChildren();
+    const existing = detail.children.length > 0;
+    detail.querySelectorAll('.shop-purchase').forEach(button => { button.disabled = true; });
     if (sample) {
       showStatus(status, 'preview', t('商品詳細のレイアウトサンプル', 'Product detail layout sample'), t('掲載内容は実際の販売商品ではありません。', 'This sample is not a product offered for sale.'));
       detail.replaceChildren(detailView(sample, true));
       detail.dataset.source = 'layout-sample';
       detail.setAttribute('aria-busy', 'false'); return;
     }
-    showStatus(status, 'loading', '', t('作品を読み込んでいます…', 'Loading piece…'));
+    if (!existing) showStatus(status, 'loading', '', t('作品を読み込んでいます…', 'Loading piece…'));
     try {
-      const product = await storefront.product(handle, { language: language().toUpperCase(), signal: controller.signal });
+      const product = await client.product(handle, { language: language().toUpperCase(), signal: controller.signal });
       if (currentGeneration !== generation) return;
       detail.dataset.source = 'shopify';
       detail.replaceChildren(detailView(product, false));
       showStatus(status, 'ready', '', '');
     } catch (error) {
       if (currentGeneration !== generation || error.name === 'AbortError') return;
-      detail.dataset.source = 'unavailable';
-      if (error.code === 'NOT_FOUND') showStatus(status, 'error', t('商品が見つかりませんでした。', 'This piece could not be found.'), t('作品一覧から商品をお選びください。', 'Please choose a piece from the collection.'));
-      else showStatus(status, 'error', t('商品を読み込めませんでした。', 'This piece could not be loaded.'), t('しばらくしてから、もう一度お試しください。', 'Please try again shortly.'), load);
+      if (error.code === 'NOT_FOUND') { detail.replaceChildren(); detail.dataset.source = 'unavailable'; showStatus(status, 'error', t('商品が見つかりませんでした。', 'This piece could not be found.'), t('作品一覧から商品をお選びください。', 'Please choose a piece from the collection.')); }
+      else showStatus(status, 'error', existing ? t('最新の価格・在庫を確認できませんでした。', 'Current prices and availability could not be checked.') : t('商品を読み込めませんでした。', 'This piece could not be loaded.'), t('しばらくしてから、もう一度お試しください。', 'Please try again shortly.'), load);
     } finally { if (currentGeneration === generation) detail.setAttribute('aria-busy', 'false'); }
   }
   document.addEventListener('kmn:languagechange', load);
-  load();
+  return load();
 }
 
-document.querySelectorAll('[data-storefront]').forEach(root => root.dataset.storefront === 'product' ? initDetail(root) : initCatalog(root));
+if (!globalThis.__KMN_BUILD__) document.querySelectorAll('[data-storefront]').forEach(root => root.dataset.storefront === 'product' ? initDetail(root) : initCatalog(root));

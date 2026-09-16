@@ -1,0 +1,5 @@
+/* Language links retain the existing header dimensions. */
+.lr-language a { padding:var(--sp-1) 0; color:var(--c-ink-soft); }
+.lr-language a[aria-current="true"] { color:var(--lr-ink); font-weight:600; }
+.lr-language a:focus-visible { outline:2px solid currentColor; outline-offset:4px; }
+.shop-description-rich img,.article-body img { max-width:100%; height:auto; }
