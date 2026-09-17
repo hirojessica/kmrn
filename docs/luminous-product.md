@@ -1,5 +1,7 @@
 # ルミナス ドーナッツパンダ ティポット
 
+2026-09-17：トップ・商品一覧・商品詳細の価格に「（税込）」、英語版に「Tax included」を追加。商品詳細の価格直下に「日本国内送料無料」／「Free shipping within Japan」を表示します。送料の注記はこの商品IDだけに適用し、Shopifyの販売価格・税・配送設定自体は変更していません。
+
 2026-09-06登録。価格・在庫・説明は依頼者の指定値、写真は指定された9つのJPGを使用。
 
 - [商品ページ](https://hirojessica.github.io/kmrn/product.html?handle=luminous-doughnut-panda-teapot)

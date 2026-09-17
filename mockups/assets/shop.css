@@ -20,6 +20,8 @@
 .shop-card:hover h3{text-decoration:underline;text-underline-offset:var(--sp-1)}
 .shop-card p{font-size:var(--fs-sm);margin-top:var(--sp-1);color:var(--c-ink-soft)}
 .shop-card .shop-price{font-size:var(--fs-md);color:var(--lr-ink)}
+.shop-price,.shop-detail-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-1)}
+.shop-tax{font-size:var(--fs-sm);color:var(--c-ink-soft);white-space:nowrap}
 .shop-sold-out{display:inline-block;border:1px solid var(--c-line);padding:var(--sp-1) var(--sp-2);font-size:var(--fs-label);margin-top:var(--sp-2)}
 .shop-status{margin-bottom:var(--sp-6);font-size:var(--fs-sm);color:var(--c-ink-soft)}
 .shop-status:empty{display:none}
@@ -37,7 +39,9 @@
 .shop-thumbnails button[aria-pressed="true"]{border-color:var(--c-celadon)}
 .shop-thumbnails img{position:absolute;inset:0;height:100%;width:100%;object-fit:contain}
 .shop-detail-copy h1{font-size:clamp(26px,3vw,36px);line-height:1.7;letter-spacing:.03em;margin-block:var(--sp-3) var(--sp-5);overflow-wrap:anywhere}
-.shop-detail-price{font-size:var(--fs-h3);margin-block:var(--sp-5)}
+.shop-detail-pricing{margin-block:var(--sp-5)}
+.shop-detail-price{font-size:var(--fs-h3)}
+.shop-shipping-note{font-size:var(--fs-sm);color:var(--c-ink-soft);margin-top:var(--sp-1)}
 .shop-description{white-space:pre-line;overflow-wrap:anywhere;line-height:var(--lh-body);color:var(--c-ink-soft);margin-block:var(--sp-6)}
 .shop-description-rich{white-space:normal}
 .shop-description-rich h2,.shop-description-rich h3,.shop-description-rich h4{font-family:var(--font-sans);font-size:var(--fs-md);font-weight:600;line-height:var(--lh-body);margin-block:var(--sp-6) var(--sp-3)}

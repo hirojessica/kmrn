@@ -43,6 +43,12 @@ function priceRange(product) {
   const value = formatMoney(min, language());
   return value && max && Number(max.amount) > Number(min.amount) ? `${value}${t('〜', '+')}` : value;
 }
+function displayPrice(node, amount, product) {
+  node.replaceChildren();
+  if (!amount) return;
+  const label = isTestProduct(product) ? t('テスト価格 ' + amount, 'Test price ' + amount) : amount;
+  node.append(document.createTextNode(label + ' '), element('span', 'shop-tax', t('（税込）', 'Tax included')));
+}
 export function descriptionText(product) {
   if (!product.descriptionHtml) return product.description || '';
   const doc = new DOMParser().parseFromString(product.descriptionHtml, 'text/html');
@@ -66,7 +72,10 @@ export function card(product, sample = false) {
   if (sample) link.append(element('p', '', t('レイアウトサンプル', 'Layout sample')));
   else {
     const price = priceRange(product);
-    if (price) link.append(element('p', 'shop-price', isTestProduct(product) ? t(`テスト価格 ${price}`, `Test price ${price}`) : price));
+    if (price) {
+      const priceLabel = element('p', 'shop-price');
+      displayPrice(priceLabel, price, product); link.append(priceLabel);
+    }
     if (isTestProduct(product)) link.append(element('p', 'shop-test-label', t('テスト商品・実際の発送はありません', 'Test product · No actual shipment')));
     if (!product.availableForSale) link.append(element('span', 'shop-sold-out', t('品切れ', 'Sold out')));
   }
@@ -181,7 +190,14 @@ export function detailView(product, sample) {
   const copy = element('div', 'shop-detail-copy');
   copy.append(element('p', 'lr-label', sample ? 'LAYOUT SAMPLE' : isTestProduct(product) ? 'TEST PRODUCT' : 'FROM OUR SETO ATELIER'), element('h1', '', title));
   const price = element('p', 'shop-detail-price', sample ? t('価格は商品登録後に表示', 'Price shown after product setup') : priceRange(product));
-  copy.append(price);
+  if (!sample) displayPrice(price, priceRange(product), product);
+  const pricing = element('div', 'shop-detail-pricing');
+  pricing.append(price);
+  // Only this product has the approved domestic free-shipping profile.
+  if (!sample && product.id === 'gid://shopify/Product/10387562365210') {
+    pricing.append(element('p', 'shop-shipping-note', t('日本国内送料無料', 'Free shipping within Japan')));
+  }
+  copy.append(pricing);
   const description = element('div', 'shop-description', sample ? t('こちらは商品詳細ページのレイアウトサンプルです。\n\n実際の商品名、写真、説明、価格をShopifyに登録すると、この位置に表示されます。写真は同じ比率の枠に収め、作品全体が見えるように表示します。', 'This is a layout sample for a product detail page.\n\nProduct names, photos, descriptions and prices will be loaded from Shopify. Images fit within a consistent frame so the entire piece remains visible.') : descriptionText(product));
   if (!sample && product.descriptionHtml) { description.replaceChildren(articleFragment(product.descriptionHtml)); description.classList.add('shop-description-rich'); }
   const variants = product.variants?.nodes || [];
@@ -191,7 +207,7 @@ export function detailView(product, sample) {
   const purchase = element('button', 'lr-button shop-purchase');
   purchase.type = 'button';
   const updateVariant = () => {
-    if (selected) { const amount = formatMoney(selected.price, language()); price.textContent = isTestProduct(product) ? t(`テスト価格 ${amount}`, `Test price ${amount}`) : amount; }
+    if (selected) displayPrice(price, formatMoney(selected.price, language()), product);
     purchase.disabled = sample || !checkoutURL(product, selected, storefrontConfig);
     purchase.textContent = !mode ? t('オンライン販売準備中', 'Online sales coming soon') : !selected?.availableForSale ? t('品切れ', 'Sold out') : mode === 'test' ? t('テスト購入へ進む', 'Try test checkout') : t('購入手続きへ', 'Proceed to checkout');
   };
