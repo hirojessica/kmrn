@@ -10,7 +10,7 @@ import { storefrontConfig } from '../mockups/assets/storefront-config.js';
 import { responsiveImage } from '../mockups/assets/responsive-image.js';
 import { localizedGalleryItem } from '../mockups/assets/gallery-data.js';
 import { localizedLinkURL } from '../mockups/assets/site-url.js';
-import { allPages, routes, productSchema, jsonScript, summary } from './seo.mjs';
+import { allPages, routes, productSchema, jsonScript, summary, socialImage } from './seo.mjs';
 
 const repo = fileURLToPath(new URL('../', import.meta.url));
 const source = path.join(repo, 'mockups');
@@ -147,7 +147,12 @@ function metadata(doc, { title, description, url, image, lang, schema, route }) 
   meta('og:title', title, true); meta('og:description', description, true); meta('og:url', url, true);
   meta('og:type', schema?.['@type'] === 'BlogPosting' ? 'article' : 'website', true);
   meta('og:locale', lang === 'en' ? 'en_US' : 'ja_JP', true); meta('og:site_name', 'KM Nagoya Doll', true);
-  meta('og:image', image, true); meta('twitter:card', image ? 'summary_large_image' : 'summary');
+  const social = socialImage(image, site, lang);
+  meta('og:image', social.url, true);
+  meta('og:image:width', social.width, true); meta('og:image:height', social.height, true);
+  meta('og:image:alt', social.altText || title, true);
+  meta('twitter:card', 'summary_large_image'); meta('twitter:image', social.url);
+  meta('twitter:image:alt', social.altText || title); meta('twitter:title', title); meta('twitter:description', description);
   for (const [hreflang, prefix] of [['ja', ''], ['en', 'en/'], ['x-default', '']]) {
     const link = doc.createElement('link'); link.rel = 'alternate'; link.hreflang = hreflang; link.href = new URL(prefix + route, site).href; doc.head.append(link);
   }
@@ -230,15 +235,15 @@ async function render(templateRoute, route, lang, item, kind) {
     section.querySelector('noscript').textContent = lang === 'en' ? 'Enable JavaScript to check current availability and purchase.' : '最新の在庫確認・購入手続きにはJavaScriptを有効にしてください。';
     title = item.seo?.title || `${item.title}｜${lang === 'en' ? 'KM Nagoya Doll' : 'KM名古屋ドール'}`;
     description = summary(item.seo?.description || textContent(item.descriptionHtml));
-    image = item.featuredImage?.url;
+    image = item.featuredImage && { ...item.featuredImage, altText: item.title };
     schema = productSchema(item, new URL(current, site).href, lang, storefrontConfig.checkoutEnabled === true && !item.tags?.includes('kmn-test'));
   } else if (kind === 'article') {
     const section = doc.querySelector('[data-content="article"]'); section.dataset.handle = item.handle;
     const body = section.querySelector('[data-article-body]'); body.replaceChildren(articleView(item)); body.setAttribute('aria-busy', 'false');
     section.querySelector('[data-content-status]').replaceChildren(); section.querySelector('noscript')?.remove();
     title = `${item.title}｜${lang === 'en' ? 'News | KM Nagoya Doll' : 'お知らせ｜KM名古屋ドール'}`;
-    description = summary(textContent(item.contentHtml)); image = item.image?.url;
-    schema = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: item.title, datePublished: item.publishedAt, inLanguage: lang, mainEntityOfPage: new URL(current, site).href, publisher: { '@type': 'Organization', name: 'KM Nagoya Doll' }, ...(image ? { image } : {}) };
+    description = summary(textContent(item.contentHtml)); image = item.image && { ...item.image, altText: item.title };
+    schema = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: item.title, datePublished: item.publishedAt, inLanguage: lang, mainEntityOfPage: new URL(current, site).href, publisher: { '@type': 'Organization', name: 'KM Nagoya Doll' }, ...(image?.url ? { image: image.url } : {}) };
   }
   description ||= summary(doc.querySelector('main h1')?.parentElement.textContent || doc.querySelector('main')?.textContent);
   metadata(doc, { title, description, url: new URL(current, site).href, image, lang, schema, route });
@@ -280,6 +285,19 @@ for (const lang of languages) {
   for (const route of routes) await render(route, route, lang);
   for (const product of content[lang].products) await render('product/', `product/${encodeURIComponent(product.handle)}/`, lang, product, 'product');
   for (const article of content[lang].articles) await render('news-article/', `news/${encodeURIComponent(article.handle)}/`, lang, article, 'article');
+}
+// Social crawlers may not execute the redirects on previously shared .html URLs.
+// Reuse the canonical page metadata while preserving the lightweight redirect shell.
+for (const route of routes.filter(Boolean)) {
+  const name = `${route.slice(0, -1)}.html`;
+  const legacy = new JSDOM(await fs.readFile(path.join(output, name), 'utf8'));
+  const canonical = new JSDOM(await fs.readFile(path.join(output, route, 'index.html'), 'utf8'));
+  legacy.window.document.title = canonical.window.document.title;
+  for (const node of canonical.window.document.querySelectorAll('meta[property^="og:"],meta[name^="twitter:"],meta[name="description"],link[rel="canonical"],link[rel="alternate"][hreflang]')) {
+    legacy.window.document.head.append(legacy.window.document.importNode(node, true));
+  }
+  await fs.writeFile(path.join(output, name), legacy.serialize());
+  legacy.window.close(); canonical.window.close();
 }
 await fs.writeFile(path.join(output, 'build-manifest.json'), JSON.stringify({ builtAt: new Date().toISOString(), site: site.href, indexing: 'noindex', pages: pageReport, images: imageReport }, null, 2));
 console.log(`Built ${pageReport.length} pages; optimized ${imageReport.length} local photos. Preview remains noindex.`);

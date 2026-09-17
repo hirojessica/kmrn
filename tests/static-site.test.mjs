@@ -3,10 +3,26 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { JSDOM } from 'jsdom';
-import { allPages, jsonScript, productSchema } from '../scripts/seo.mjs';
+import { allPages, jsonScript, productSchema, socialImage } from '../scripts/seo.mjs';
 import { imageURL, responsiveImage } from '../mockups/assets/responsive-image.js';
 import { siteURL, contentURL } from '../mockups/assets/site-url.js';
 import { articleFragment } from '../mockups/assets/richtext.js';
+
+test('sharing metadata falls back to a real common image on preview and production hosts', () => {
+  for (const site of ['https://hirojessica.github.io/kmrn/', 'https://km-nagoya-doll.com/']) {
+    const image = socialImage(null, site, 'en');
+    assert.equal(image.url, `${site}assets/ogp-common-20260917.jpg`);
+    assert.equal(image.width, 1200); assert.equal(image.height, 630);
+    assert.match(image.altText, /porcelain lace doll/);
+    assert.ok(fs.existsSync(new URL('../mockups/assets/ogp-common-20260917.jpg', import.meta.url)));
+  }
+});
+test('individual product or article images always take precedence over the common image', () => {
+  const input = { url: 'https://cdn.shopify.com/p_trio.jpg?v=123', width: 3556, height: 2000, altText: 'Panda teapots' };
+  assert.deepEqual(socialImage(input, 'https://example.com/', 'ja'), input);
+  const cover = { url: 'https://cdn.shopify.com/article-cover.jpg', altText: 'Workshop' };
+  assert.deepEqual(socialImage(cover, 'https://example.com/', 'en'), cover);
+});
 
 test('static content pagination includes all public nodes and rejects partial/repeated pages', async () => {
   const result = await allPages(async after => after ? { nodes: [{ id: '2' }], pageInfo: { hasNextPage: false } } : { nodes: [{ id: '1' }], pageInfo: { hasNextPage: true, endCursor: 'next' } });

@@ -1,4 +1,14 @@
 export const routes = ['', 'about/', 'collection/', 'product/', 'news/', 'news-article/', 'gallery/', 'contact/', 'contact-thanks/'];
+export const commonSocialImage = 'assets/ogp-common-20260917.jpg';
+export function socialImage(image, site, language) {
+  if (image?.url) {
+    return { ...image, url: new URL(image.url, site).href };
+  }
+  return {
+    url: new URL(commonSocialImage, site).href, width: 1200, height: 630,
+    altText: language === 'en' ? 'KM Nagoya Doll — pink porcelain lace doll' : 'KM名古屋ドール — 陶に咲く、レース。ピンクの陶製レース人形'
+  };
+}
 export const jsonScript = value => JSON.stringify(value).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
 export const summary = (value, max = 170) => {
   const text = String(value || '').replace(/\s+/g, ' ').trim();

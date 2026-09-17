@@ -2,9 +2,26 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
+import sharp from 'sharp';
+import { commonSocialImage, routes } from './seo.mjs';
 const root = new URL('../site-build/', import.meta.url);
 const manifest = JSON.parse(fs.readFileSync(new URL('build-manifest.json', root)));
 const base = new URL(manifest.site);
+const commonImageMetadata = await sharp(fs.readFileSync(new URL(commonSocialImage, root))).metadata();
+assert.equal(commonImageMetadata.width, 1200); assert.equal(commonImageMetadata.height, 630);
+function checkSocial(doc, label) {
+  assert.equal(doc.querySelectorAll('meta[property="og:image"]').length, 1, `${label}: exactly one sharing image`);
+  const image = new URL(doc.querySelector('meta[property="og:image"]').content);
+  assert.ok(['https:', 'http:'].includes(image.protocol));
+  assert.equal(doc.querySelector('meta[name="twitter:image"]').content, image.href);
+  assert.equal(doc.querySelector('meta[name="twitter:card"]').content, 'summary_large_image');
+  assert.equal(doc.querySelector('meta[property="og:title"]').content, doc.title);
+  assert.equal(doc.querySelector('meta[name="twitter:title"]').content, doc.title);
+  assert.ok(doc.querySelector('meta[property="og:image:alt"]').content);
+  if (image.origin === base.origin && image.pathname.startsWith(base.pathname)) {
+    assert.ok(fs.existsSync(new URL(image.pathname.slice(base.pathname.length), root)), `${label}: sharing image exists`);
+  }
+}
 let refs = 0;
 for (const page of manifest.pages) {
   const dom = new JSDOM(fs.readFileSync(new URL(page.route + 'index.html', root), 'utf8'), { url: new URL(page.route, base).href });
@@ -12,6 +29,8 @@ for (const page of manifest.pages) {
   assert.equal(doc.documentElement.lang, page.language);
   assert.equal(doc.querySelector('meta[name=robots]').content, 'noindex', 'Preview must remain excluded');
   assert.ok(doc.querySelector('meta[name=description]').content);
+  checkSocial(doc, page.route);
+  if (page.route === 'en/') assert.equal(doc.title, 'Lace blooms in porcelain | KM Nagoya Doll');
   assert.equal(doc.querySelector('link[rel=canonical]').href, new URL(page.route, base).href);
   assert.equal(doc.querySelectorAll('link[rel=alternate][hreflang]').length, 3);
   assert.equal(doc.querySelectorAll('[data-language]').length, 2);
@@ -50,4 +69,13 @@ for (const page of manifest.pages) {
   for (const img of doc.querySelectorAll('img[srcset]')) assert.ok(img.getAttribute('sizes'));
   dom.window.close();
 }
-console.log(`Verified ${manifest.pages.length} initial-HTML pages, ${refs} local links/assets, language pairs and preview noindex.`);
+for (const route of routes.filter(Boolean)) {
+  const name = `${route.slice(0, -1)}.html`;
+  const dom = new JSDOM(fs.readFileSync(new URL(name, root), 'utf8'));
+  checkSocial(dom.window.document, name);
+  assert.equal(dom.window.document.querySelector('meta[name="robots"]').content, 'noindex');
+  assert.equal(dom.window.document.querySelector('link[rel="canonical"]').href, new URL(route, base).href);
+  assert.equal(dom.window.document.querySelectorAll('script').length, 1, 'Legacy redirects stay lightweight');
+  dom.window.close();
+}
+console.log(`Verified ${manifest.pages.length} initial-HTML pages, ${refs} local links/assets, language pairs, preview noindex and sharing metadata (including legacy URLs).`);
