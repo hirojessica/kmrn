@@ -1,5 +1,5 @@
 export const routes = ['', 'about/', 'collection/', 'product/', 'news/', 'news-article/', 'gallery/', 'contact/', 'contact-thanks/'];
-export const commonSocialImage = 'assets/ogp-common-20260917.jpg';
+export const commonSocialImage = 'assets/ogp-common-20260917-v2.jpg';
 export function socialImage(image, site, language) {
   if (image?.url) {
     return { ...image, url: new URL(image.url, site).href };

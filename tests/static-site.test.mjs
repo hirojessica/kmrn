@@ -11,10 +11,10 @@ import { articleFragment } from '../mockups/assets/richtext.js';
 test('sharing metadata falls back to a real common image on preview and production hosts', () => {
   for (const site of ['https://hirojessica.github.io/kmrn/', 'https://km-nagoya-doll.com/']) {
     const image = socialImage(null, site, 'en');
-    assert.equal(image.url, `${site}assets/ogp-common-20260917.jpg`);
+    assert.equal(image.url, `${site}assets/ogp-common-20260917-v2.jpg`);
     assert.equal(image.width, 1200); assert.equal(image.height, 630);
     assert.match(image.altText, /porcelain lace doll/);
-    assert.ok(fs.existsSync(new URL('../mockups/assets/ogp-common-20260917.jpg', import.meta.url)));
+    assert.ok(fs.existsSync(new URL('../mockups/assets/ogp-common-20260917-v2.jpg', import.meta.url)));
   }
 });
 test('individual product or article images always take precedence over the common image', () => {
