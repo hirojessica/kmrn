@@ -53,7 +53,7 @@ function openPhoto(item, trigger) {
   dialog.addEventListener('close', () => trigger.focus(), { once: true });
   dialog.showModal();
 }
-function galleryCard(raw) {
+export function galleryCard(raw) {
   const item = galleryItem(raw), url = safeImageURL(item.image?.url);
   if (!url) return null;
   const card = el('figure', null, 'gallery-card'), button = el('button'); button.type = 'button';

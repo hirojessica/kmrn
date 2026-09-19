@@ -1,12 +1,12 @@
-name: Build Shopify content and deploy preview
+name: Build and deploy preview
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-  schedule:
-    - cron: '17 * * * *'
+  # No hourly refresh while the Shopify plan is pending. Saved site-first
+  # content is updated through pushes or a manual run, without Shopify access.
 
 permissions:
   contents: read
@@ -19,6 +19,10 @@ concurrency:
 
 jobs:
   deploy:
+    env:
+      SITE_MODE: site-first
+      SITE_URL: https://hirojessica.github.io/kmrn/
+      SITE_INDEXING: noindex
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -43,7 +47,7 @@ jobs:
       - name: Check page URLs and storefront behavior
         run: node --test tests/*.test.mjs
 
-      - name: Build Japanese and English pages from published Shopify content
+      - name: Build Japanese and English pages from saved site-first content
         run: pnpm build
 
       - name: Verify generated HTML, language links and image files

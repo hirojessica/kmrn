@@ -11,17 +11,20 @@ import { responsiveImage } from '../mockups/assets/responsive-image.js';
 import { localizedGalleryItem } from '../mockups/assets/gallery-data.js';
 import { localizedLinkURL } from '../mockups/assets/site-url.js';
 import { allPages, routes, productSchema, jsonScript, summary, socialImage } from './seo.mjs';
+import { siteFirstContent, offlineAPI, comingSoon } from './site-first.mjs';
 
 const repo = fileURLToPath(new URL('../', import.meta.url));
 const source = path.join(repo, 'mockups');
 const output = path.join(repo, 'site-build');
 const site = new URL(process.env.SITE_URL || 'https://hirojessica.github.io/kmrn/');
 if (!site.pathname.endsWith('/') || !['https:', 'http:'].includes(site.protocol)) throw new Error('SITE_URL must be an HTTP(S) directory URL');
-// Preview indexing is intentionally fixed. Production launch is a separate change.
+const siteFirst = process.env.SITE_MODE === 'site-first';
+const production = process.env.SITE_INDEXING === 'production';
+if (production && (site.href !== 'https://km-nagoya-doll.com/' || !siteFirst)) throw new Error('Production indexing requires the approved site-first production build');
 const languages = ['ja', 'en'];
 globalThis.__KMN_BUILD__ = true;
 const { card, detailView } = await import('../mockups/assets/shop.js');
-const { newsRow, articleView } = await import('../mockups/assets/content.js');
+const { newsRow, articleView, galleryCard } = await import('../mockups/assets/content.js');
 const aboutScript = await fs.readFile(path.join(source, 'assets/about-language.js'), 'utf8');
 const dictionary = vm.runInNewContext(`(${aboutScript.match(/var translations = (\{[\s\S]*?\n  \});/)[1]})`);
 Object.assign(dictionary, {
@@ -36,8 +39,8 @@ Object.assign(dictionary, {
 });
 const templates = new Map(await Promise.all(routes.map(async route => [route, await fs.readFile(path.join(source, route, 'index.html'), 'utf8')])));
 const photoHandles = [...new Set([...templates.values()].flatMap(html => [...html.matchAll(/data-gallery-handle="([^"]+)"/g)].map(m => m[1])))];
-const content = {};
-for (const lang of languages) {
+const content = siteFirst ? await siteFirstContent(site) : {};
+for (const lang of siteFirst ? [] : languages) {
   const language = lang.toUpperCase();
   const [products, articles, photos] = await Promise.all([
     allPages(after => storefront.products({ first: 100, after, language })),
@@ -72,6 +75,7 @@ for (const name of assetFiles.filter(name => name.endsWith('.js'))) {
   await fs.writeFile(path.join(output, 'assets', name), script.replace(/(from\s*['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?/g, `$1$2?v=${assetVersion}`));
 }
 await fs.copyFile(path.join(source, 'favicon.ico'), path.join(output, 'favicon.ico'));
+if (siteFirst) await fs.writeFile(path.join(output, 'assets/storefront-api.js'), offlineAPI(content.ja.gallery, site));
 await fs.writeFile(path.join(output, '.nojekyll'), '');
 for (const route of routes.filter(Boolean)) {
   const name = `${route.slice(0, -1)}.html`;
@@ -170,10 +174,15 @@ async function render(templateRoute, route, lang, item, kind) {
   const doc = dom.window.document;
   globalThis.document = doc; globalThis.DOMParser = dom.window.DOMParser; globalThis.location = dom.window.location;
   translate(doc, lang);
+  // The HTML fallback must use the same host and language as this build.
+  // contact.js also recomputes this URL when the form is submitted.
+  const contactNext = doc.querySelector('[data-contact-form] input[name="_next"]');
+  if (contactNext) contactNext.value = new URL(`${lang === 'en' ? 'en/' : ''}contact-thanks/`, site).href;
   const data = content[lang];
   const root = doc.documentElement;
   root.dataset.staticSite = 'true'; root.dataset.siteRoot = relative(current, './');
   if (!root.dataset.siteRoot.endsWith('/')) root.dataset.siteRoot += '/';
+  root.dataset.siteMode = siteFirst ? 'site-first' : 'shopify';
   root.dataset.products = data.products.map(item => item.handle).join('|');
   root.dataset.articles = data.articles.map(item => item.handle).join('|');
   if (templateRoute === 'product/' || templateRoute === 'news-article/') root.dataset.knownHandles = (templateRoute === 'product/' ? data.products : data.articles).map(item => item.handle).join('|');
@@ -203,6 +212,33 @@ async function render(templateRoute, route, lang, item, kind) {
   }
   const css = doc.createElement('link'); css.rel = 'stylesheet'; css.href = relative(current, 'assets/static-site.css'); doc.head.append(css);
 
+  if (siteFirst) {
+    doc.querySelectorAll('script[src*="shop.js"],script[src*="managed-photos.js"]').forEach(node => node.remove());
+    const launchCSS = doc.createElement('link'); launchCSS.rel = 'stylesheet'; launchCSS.href = relative(current, 'assets/site-first.css'); doc.head.append(launchCSS);
+    if (['collection/', 'product/'].includes(templateRoute)) {
+      const main = doc.querySelector('main'); main.className = 'content-main'; main.replaceChildren(comingSoon(doc, lang));
+    } else {
+      doc.querySelectorAll('[data-storefront]').forEach(node => node.replaceWith(comingSoon(doc, lang, { compact: true })));
+    }
+    const heroLink = doc.querySelector('.lr-hero-button');
+    if (heroLink) heroLink.href = relative(current, (lang === 'en' ? 'en/' : '') + 'gallery/');
+    const oldAbout = doc.querySelector('#atelier');
+    if (oldAbout) {
+      oldAbout.id = 'about';
+      for (const link of doc.querySelectorAll('a[href="#atelier"]')) link.setAttribute('href', '#about');
+    }
+    const aboutCTA = doc.querySelector('.s-cta__lead');
+    if (aboutCTA) aboutCTA.textContent = lang === 'en' ? 'Our online shop is coming soon. Wholesale and business enquiries are welcome.' : 'オンラインショップは準備中です。卸・法人のご相談もお気軽にどうぞ。';
+    const gallery = doc.querySelector('[data-content="gallery"]');
+    if (gallery) {
+      gallery.querySelector('[data-content-list]').replaceChildren(...data.gallery.slice(0, 10).map(galleryCard));
+      gallery.querySelector('[data-content-list]').setAttribute('aria-busy', 'false');
+      gallery.querySelector('[data-content-status]').hidden = true;
+    }
+  }
+  const indexable = production && ['', 'about/', 'gallery/', 'news/', 'contact/'].includes(route);
+  doc.querySelector('meta[name="robots"]').content = indexable ? 'index, follow' : 'noindex';
+
   const photoMap = new Map(data.photos.map(node => [node.handle, localizedGalleryItem(node, lang)]));
   for (const slot of doc.querySelectorAll('[data-gallery-handle]')) {
     const photo = photoMap.get(slot.dataset.galleryHandle), img = slot.querySelector('img');
@@ -223,7 +259,8 @@ async function render(templateRoute, route, lang, item, kind) {
     const list = section.querySelector('[data-content-list]');
     list.replaceChildren(...data.articles.slice(0, section.dataset.content === 'news-featured' ? 3 : 12).map(newsRow));
     list.setAttribute('aria-busy', 'false');
-    const status = section.querySelector('[data-content-status]'); status.replaceChildren(); status.hidden = true;
+    const status = section.querySelector('[data-content-status]'); status.replaceChildren(); status.hidden = !!data.articles.length;
+    if (!data.articles.length) status.textContent = lang === 'en' ? 'There are no published announcements at the moment.' : '現在、公開されているお知らせはありません。';
   }
   let title = doc.title, description, schema, image;
   if (kind === 'product') {
@@ -299,5 +336,8 @@ for (const route of routes.filter(Boolean)) {
   await fs.writeFile(path.join(output, name), legacy.serialize());
   legacy.window.close(); canonical.window.close();
 }
-await fs.writeFile(path.join(output, 'build-manifest.json'), JSON.stringify({ builtAt: new Date().toISOString(), site: site.href, indexing: 'noindex', pages: pageReport, images: imageReport }, null, 2));
-console.log(`Built ${pageReport.length} pages; optimized ${imageReport.length} local photos. Preview remains noindex.`);
+await fs.writeFile(path.join(output, 'build-manifest.json'), JSON.stringify({ builtAt: new Date().toISOString(), site: site.href, mode: siteFirst ? 'site-first' : 'shopify', indexing: production ? 'production' : 'noindex', pages: pageReport, images: imageReport }, null, 2));
+const indexRoutes = production ? pageReport.filter(page => ['', 'about/', 'gallery/', 'news/', 'contact/'].includes(page.route.replace(/^en\//, ''))) : [];
+await fs.writeFile(path.join(output, 'robots.txt'), production ? `User-agent: *\nAllow: /\nSitemap: ${new URL('sitemap.xml', site)}\n` : 'User-agent: *\nDisallow: /\n');
+await fs.writeFile(path.join(output, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + indexRoutes.map(page => `<url><loc>${new URL(page.route, site)}</loc></url>`).join('\n') + '\n</urlset>\n');
+console.log(`Built ${pageReport.length} pages; optimized ${imageReport.length} local photos. Mode: ${siteFirst ? 'site-first' : 'shopify'}; indexing: ${production ? 'production' : 'noindex'}.`);

@@ -27,13 +27,16 @@ for (const page of manifest.pages) {
   const dom = new JSDOM(fs.readFileSync(new URL(page.route + 'index.html', root), 'utf8'), { url: new URL(page.route, base).href });
   const doc = dom.window.document;
   assert.equal(doc.documentElement.lang, page.language);
-  assert.equal(doc.querySelector('meta[name=robots]').content, 'noindex', 'Preview must remain excluded');
+  const indexable = manifest.indexing === 'production' && ['', 'about/', 'gallery/', 'news/', 'contact/'].includes(page.route.replace(/^en\//, ''));
+  assert.equal(doc.querySelector('meta[name=robots]').content, indexable ? 'index, follow' : 'noindex');
   assert.ok(doc.querySelector('meta[name=description]').content);
   checkSocial(doc, page.route);
   if (page.route === 'en/') assert.equal(doc.title, 'Lace blooms in porcelain | KM Nagoya Doll');
   assert.equal(doc.querySelector('link[rel=canonical]').href, new URL(page.route, base).href);
   assert.equal(doc.querySelectorAll('link[rel=alternate][hreflang]').length, 3);
   assert.equal(doc.querySelectorAll('[data-language]').length, 2);
+  const contactNext = doc.querySelector('[data-contact-form] input[name="_next"]');
+  if (contactNext) assert.equal(contactNext.value, new URL(`${page.language === 'en' ? 'en/' : ''}contact-thanks/`, base).href, 'Contact return URL must match the build host and language');
   for (const lang of ['ja', 'en']) {
     const target = doc.querySelector(`[data-language=${lang}]`);
     assert.equal(target.tagName, 'A');
@@ -78,4 +81,16 @@ for (const route of routes.filter(Boolean)) {
   assert.equal(dom.window.document.querySelectorAll('script').length, 1, 'Legacy redirects stay lightweight');
   dom.window.close();
 }
-console.log(`Verified ${manifest.pages.length} initial-HTML pages, ${refs} local links/assets, language pairs, preview noindex and sharing metadata (including legacy URLs).`);
+if (manifest.mode === 'site-first') {
+  for (const page of manifest.pages) {
+    const html = fs.readFileSync(new URL(page.route + 'index.html', root), 'utf8');
+    const doc = new JSDOM(html).window.document;
+    assert.equal(doc.querySelectorAll('[data-storefront],.shop-purchase').length, 0, 'No purchase UI in site-first release');
+    assert.equal(doc.querySelectorAll('script[src*="shop.js"],script[src*="managed-photos.js"]').length, 0);
+    assert.equal(doc.querySelectorAll('img[src*="cdn.shopify.com"]').length, 0, 'Photos must be independent of Shopify');
+    if (page.route.endsWith('gallery/')) assert.equal(doc.querySelectorAll('.gallery-card').length, 10);
+    if (/^(en\/)?(collection|product)\/$/.test(page.route)) assert.ok(doc.querySelector('.site-coming-soon h1'));
+  }
+  assert.ok(!fs.readFileSync(new URL('assets/storefront-api.js', root), 'utf8').includes('fetch('));
+}
+console.log(`Verified ${manifest.pages.length} initial-HTML pages, ${refs} local links/assets, language pairs, ${manifest.indexing} indexing and sharing metadata (including legacy URLs).`);
